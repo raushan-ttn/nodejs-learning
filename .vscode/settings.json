@@ -1,0 +1,51 @@
+{
+  "breadcrumbs.enabled": true,
+  "css.validate": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.tabSize": 2,
+  "editor.autoIndent": "full",
+  "editor.insertSpaces": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": false,
+  "editor.renderWhitespace": "boundary",
+  "editor.wordWrapColumn": 80,
+  "editor.wordWrap": "off",
+  "editor.detectIndentation": true,
+  "editor.rulers": [
+    80
+  ],
+  "files.associations": {
+    "*.inc": "php",
+    "*.module": "php",
+    "*.install": "php",
+    "*.theme": "php",
+    "*.profile": "php",
+    "*.tpl.php": "php",
+    "*.test": "php",
+    "*.php": "php",
+    "*.info": "ini",
+    "*.html": "twig",
+  },
+  "emmet.includeLanguages": {
+    "twig": "html"
+  },
+  "php.executablePath": "/usr/bin/php",
+  "php.suggest.basic": false,
+  // Intelephense and Drupal >8 only. This should be set to the path to core/index.php.
+  "intelephense.environment.documentRoot": "core",
+  "php.validate.enable": true,
+  "php.validate.executablePath": "/usr/bin/php",
+  "php.validate.run": "onType",
+  "php-docblocker.gap": true,
+  "php-docblocker.useShortNames": true,
+  "files.trimTrailingWhitespace": true,
+  "files.restoreUndoStack": false,
+  "files.insertFinalNewline": true,
+  "html.format.enable": true,
+  "html.format.wrapLineLength": 80,
+  "telemetry.telemetryLevel": "off",
+  /* Empty Indent */
+  "emptyIndent.removeIndent": true,
+  "emptyIndent.highlightIndent": false,
+  "emptyIndent.highlightColor": "rgba(246,36,89,0.6)",
+}
