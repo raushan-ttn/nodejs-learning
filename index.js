@@ -45,22 +45,59 @@ const url = require("url");
 
 /////////////////////////////////////
 // SERVERS
-const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');
+
+const replaceTemplate = (temp, product) => {
+    let output = temp.replace(/{%PRODUCT_NAME%}/g, product.productName); // this not good practice to manupulate arguments,
+    output = output.replace(/{%PRODUCT_IMAGE%}/g, product.image);
+    output = output.replace(/{%PRODUCT_QUANTITY%}/g, product.quantity);
+    output = output.replace(/{%PRODUCT_PRICE%}/g, product.price);
+    output = output.replace(/{%PRODUCT_ID%}/g, product.id);
+    if (!product.organic) {
+        output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic'); // this classname.
+    }
+    output = output.replace(/{%FROM%}/g, product.from);
+    output = output.replace(/{%PRODUCT_NUTRITION%}/g, product.nutrients);
+    output = output.replace(/{%PRODUCT_DESC%}/g, product.description);
+    return output;
+}
+
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+
+// Read API json file
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
 const server = http.createServer((req, res) => {
-    const pathName = req.url;
-    if (pathName === '/' || pathName === '/overview') {
-        res.end("This is OVERVIEW!!!");
-    } else if (pathName === '/product') {
-        res.end("This is PRODUCT!!!");
-    } else if (pathName === '/api') {
+    const { query, pathname } = url.parse(req.url, true); // De-structuring: create variable with same key from object.
+    // Note: if we pass "true" in url.parse then get query params in object.
+
+    // Overview page
+    if (pathname === '/' || pathname === '/overview') {
+        res.writeHead(200, { "Content-type": "text/html" });
+
+        const cardsHtml = dataObj.map(product => replaceTemplate(tempCard, product)).join('');
+        const output = tempOverview.replace(/{%PRODUCT_CARDS%}/g, cardsHtml);
+
+        res.end(output);
+        // Product page
+
+    } else if (pathname === '/product') {
+        res.writeHead(200, { "Content-type": "text/html" });
+        const product = dataObj[query.id];
+        const output = replaceTemplate(tempProduct, product);
+        res.end(output);
+        // API
+
+    } else if (pathname === '/api') {
         res.writeHead(200, {
             "Content-type": "application/json"
         });
         res.end(data);
-    }
-    else {
+
+        // Not Found page
+    } else {
         res.writeHead(404, {
             "Content-type": "text-html",
             'MyOwn-header': 'Hello world'
@@ -76,4 +113,4 @@ server.listen(8000, '127.0.0.1', () => {
 // Note: console.log output will show in terminal not browser console.
 // We can create multiple Route based on conditions in NodeJs. (this not belongs to directory path like /templates).
 // http.createServer call every page load. So if we use readFile inside "/api" then file will be read every page load. So we readFile once (synchronous way) at the top of the file. this will call only once.
-//
+// templates will call synchronous same like read file.
