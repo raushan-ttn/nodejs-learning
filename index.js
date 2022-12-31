@@ -4,6 +4,7 @@
 const fs = require("fs");
 const http = require("http");
 const url = require("url");
+const replaceTemplate = require("./modules/replaceTemplate"); // do not use .js in file name as per other modules, and name should be upto you.
 
 /////////////////////////////////////
 // FILES
@@ -45,21 +46,6 @@ const url = require("url");
 
 /////////////////////////////////////
 // SERVERS
-
-const replaceTemplate = (temp, product) => {
-    let output = temp.replace(/{%PRODUCT_NAME%}/g, product.productName); // this not good practice to manupulate arguments,
-    output = output.replace(/{%PRODUCT_IMAGE%}/g, product.image);
-    output = output.replace(/{%PRODUCT_QUANTITY%}/g, product.quantity);
-    output = output.replace(/{%PRODUCT_PRICE%}/g, product.price);
-    output = output.replace(/{%PRODUCT_ID%}/g, product.id);
-    if (!product.organic) {
-        output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic'); // this classname.
-    }
-    output = output.replace(/{%FROM%}/g, product.from);
-    output = output.replace(/{%PRODUCT_NUTRITION%}/g, product.nutrients);
-    output = output.replace(/{%PRODUCT_DESC%}/g, product.description);
-    return output;
-}
 
 const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
 const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
