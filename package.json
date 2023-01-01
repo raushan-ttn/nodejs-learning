@@ -1,0 +1,25 @@
+{
+  "name": "starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raushan-ttn/nodejs-learning.git"
+  },
+  "author": "Raushan Tiwari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raushan-ttn/nodejs-learning/issues"
+  },
+  "homepage": "https://github.com/raushan-ttn/nodejs-learning#readme",
+  "dependencies": {
+    "slugify": "^1.6.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
