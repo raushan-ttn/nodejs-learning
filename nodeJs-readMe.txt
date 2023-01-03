@@ -68,4 +68,4 @@
 18. Middleware : Middleware is basically a function that can modify the incoming data.It's called middleware because it stands
                  between, so in the middle of the request and the response.
 
-19. status code: code 200 means "OK" and  "201" means created, and "404" means notFound.
+19. status code: code 200 means "OK" and  "201" means "created", and "404" means "notFound" and "204" means "contentNotAvailable".

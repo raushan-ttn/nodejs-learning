@@ -106,7 +106,23 @@ app.patch("/nitours/v1/tours/:id", (req, res) => {
         tour: "Updated data" // Just for placeholder, no need to build whole logic here.
       }
     });
-})
+});
+
+// delete request.
+app.delete("/nitours/v1/tours/:id", (req, res) => {
+
+  if (req.params.id * 1 > tours.length) {
+    res.status(404)
+      .json({ status: "fail", message: "InValid ID" });
+  }
+
+  res
+    .status(204)
+    .json({
+      status: "SUCCESS",
+      data: null
+    });
+});
 
 const port = 3000;
 
