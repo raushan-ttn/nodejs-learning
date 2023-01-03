@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const app = express();
 
+app.use(express.json()); // this is middleware. this will provide value for "req.body", without this show undefined.
 
 // Post API callbacks.
 /*
@@ -33,9 +34,28 @@ app.get("/nitours/v1/tours", (req, res) => {
       status: "SUCCESS",
       result: tours.length,
       data: {
-         tours,
+        // tours: tours  // In ES6 do not need to specify key and value at the same name.
+        tours,
       }
     });
+});
+
+// To modify request data we need to use middleware. and need to define at top.
+app.post("/nitours/v1/tours", (req, res) => {
+  // console.log(req.body);
+  const newId = tours[tours.length - 1].id + 1;
+  const newTour = Object.assign({ id: newId }, req.body); // this will merge two object.
+
+  tours.push(newTour);
+  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+    res.status(201).json({
+      status: "SUCCESS",
+      data: {
+        tour: tours,
+      }
+    })
+  });
+  // Note: status code 201 for created
 });
 
 const port = 3000;
