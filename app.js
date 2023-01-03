@@ -23,12 +23,12 @@ app.use(express.json()); // this is middleware. this will provide value for "req
     res.send("Hello world from POST API"); // status code 200 is by default.
   });
 */
-
+// Note when we call API event loop is working from app.get, so that we can read file at top, because its read once for all request.
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
-// Note when we call API event loop is working from app.get, so that we can read file at top, because its read once for all request.
-app.get("/nitours/v1/tours", (req, res) => {
+
+const getTours = (req, res) => {
   res
     .status(200)
     .json({
@@ -39,7 +39,7 @@ app.get("/nitours/v1/tours", (req, res) => {
         tours,
       }
     });
-});
+};
 
 // Get tour based on parameter id.
 
@@ -47,8 +47,7 @@ app.get("/nitours/v1/tours", (req, res) => {
 
 // Note: we can define n number of parameters in URL, by default all params are mendatory. add/suffix  question mark (?) to make
 // it as optional.
-
-app.get("/nitours/v1/tours/:id", (req, res) => {
+const getSingleTour = (req, res) => {
   console.log(req.params); // to get all parameter, param return all params as object.
   const id = req.params.id * 1; // this is nice trick to convert string to number. Here req.param.id is string and converted in num.
   const tour = tours.find(el => el.id === id);
@@ -68,12 +67,11 @@ app.get("/nitours/v1/tours/:id", (req, res) => {
         tour
       }
     });
-});
-
+};
 
 
 // To modify request data we need to use middleware. and need to define at top.
-app.post("/nitours/v1/tours", (req, res) => {
+const createTour = (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body); // this will merge two object.
@@ -88,11 +86,10 @@ app.post("/nitours/v1/tours", (req, res) => {
     })
   });
   // Note: status code 201 for created
-});
+};
 
 // Update request.
-app.patch("/nitours/v1/tours/:id", (req, res) => {
-
+const updateTour = (req, res) => {
   if (req.params.id * 1 > tours.length) {
     res.status(404)
       .json({ status: "fail", message: "InValid ID" });
@@ -106,10 +103,11 @@ app.patch("/nitours/v1/tours/:id", (req, res) => {
         tour: "Updated data" // Just for placeholder, no need to build whole logic here.
       }
     });
-});
+};
+
 
 // delete request.
-app.delete("/nitours/v1/tours/:id", (req, res) => {
+const deleteTour = (req, res) => {
 
   if (req.params.id * 1 > tours.length) {
     res.status(404)
@@ -122,7 +120,23 @@ app.delete("/nitours/v1/tours/:id", (req, res) => {
       status: "SUCCESS",
       data: null
     });
-});
+};
+
+// Note: To refectoring the code, all routes are togather and handler are togather.
+/*
+    app.get("/nitours/v1/tours/:id", getSingleTour);
+    app.get("/nitours/v1/tours", getTours);
+    app.post("/nitours/v1/tours", createTour);
+    app.patch("/nitours/v1/tours/:id", updateTour);
+    app.delete("/nitours/v1/tours/:id", deleteTour);
+ */
+
+// Note in express we have route method to combine similar route togather.
+
+app.route("/nitours/v1/tours").get(getTours).post(createTour);
+app.route("/nitours/v1/tours/:id").get(getSingleTour).patch(updateTour).delete(deleteTour);
+
+
 
 const port = 3000;
 
