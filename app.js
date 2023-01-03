@@ -1,3 +1,4 @@
+const { fail } = require("assert");
 const express = require("express");
 const fs = require('fs');
 
@@ -39,6 +40,37 @@ app.get("/nitours/v1/tours", (req, res) => {
       }
     });
 });
+
+// Get tour based on parameter id.
+
+// app.get("/nitours/v1/tours/:id/:x/:y?", (req, res) => {
+
+// Note: we can define n number of parameters in URL, by default all params are mendatory. add/suffix  question mark (?) to make
+// it as optional.
+
+app.get("/nitours/v1/tours/:id", (req, res) => {
+  console.log(req.params); // to get all parameter, param return all params as object.
+  const id = req.params.id * 1; // this is nice trick to convert string to number. Here req.param.id is string and converted in num.
+  const tour = tours.find(el => el.id === id);
+
+  // if(id > tours.length){
+  // if(typeof tour === 'undefined'){
+  if (!tour) {
+    res.status(404)
+      .json({ status: "fail", message: "InValid ID" });
+  }
+
+  res
+    .status(200)
+    .json({
+      status: "SUCCESS",
+      data: {
+        tour
+      }
+    });
+});
+
+
 
 // To modify request data we need to use middleware. and need to define at top.
 app.post("/nitours/v1/tours", (req, res) => {
