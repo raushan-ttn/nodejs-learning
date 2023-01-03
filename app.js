@@ -90,6 +90,24 @@ app.post("/nitours/v1/tours", (req, res) => {
   // Note: status code 201 for created
 });
 
+// Update request.
+app.patch("/nitours/v1/tours/:id", (req, res) => {
+
+  if (req.params.id * 1 > tours.length) {
+    res.status(404)
+      .json({ status: "fail", message: "InValid ID" });
+  }
+
+  res
+    .status(200)
+    .json({
+      status: "SUCCESS",
+      data: {
+        tour: "Updated data" // Just for placeholder, no need to build whole logic here.
+      }
+    });
+})
+
 const port = 3000;
 
 app.listen(port, () => {

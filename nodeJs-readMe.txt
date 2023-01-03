@@ -58,7 +58,8 @@
                    types of http methods, and based on these method endpoint works perfectly.
                    Example => POST => /tours => create
                               GET  => /tours/7 => read
-                              PUT  => /tours/7 => update
+                              PUT  => /tours/7 => update  // Update the entire Object of the data.
+                              PATCH => /tours/7 => update // Update the property of Object not entire object of the data.
                               DELETE => /tours/7 => DELETE
 
 17. Stateless RESTful API: All state is handled on the client not on the server. this means that each request must contains "all"
