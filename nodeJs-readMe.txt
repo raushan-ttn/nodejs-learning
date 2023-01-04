@@ -67,5 +67,14 @@
 
 18. Middleware : Middleware is basically a function that can modify the incoming data.It's called middleware because it stands
                  between, so in the middle of the request and the response.
+                 Examples: 1. parsing body
+                           2. logging
+                           3. setting headers
+                           4. router
+                Note: 1. All the middleware working togather in application is called middleware stack.
+                      2. In case of middleware Order of middleware is more important, otherwise it will not work properly.
+                      3. If middleware code write after routes then this case request and response cycle will complete before this
+                          in that case middleware not call.
+
 
 19. status code: code 200 means "OK" and  "201" means "created", and "404" means "notFound" and "204" means "contentNotAvailable".

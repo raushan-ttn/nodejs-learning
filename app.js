@@ -6,6 +6,21 @@ const app = express();
 
 app.use(express.json()); // this is middleware. this will provide value for "req.body", without this show undefined.
 
+// Create Custom MiddleWare.
+
+app.use((req1, res1, next) => { // params name up to you.
+  console.log("This is our custom middleware!!!");
+  next(); // next1/next function call next middleware in stack.
+});
+
+// Note: In case of middleware Order of middleware is more important, otherwise it will not work properly.
+// If middleware code write after routes then this case request and response cycle will complete before this in that case middleware not call.
+
+app.use((req, res, next) => {
+  req.requestTime = `Time comes from middleware: ` + new Date().toISOString();
+  next();
+});
+
 // Post API callbacks.
 /*
   app.get("/", (req, res) => {
@@ -33,6 +48,7 @@ const getTours = (req, res) => {
     .status(200)
     .json({
       status: "SUCCESS",
+      requestTime: req.requestTime,
       result: tours.length,
       data: {
         // tours: tours  // In ES6 do not need to specify key and value at the same name.
