@@ -1,6 +1,8 @@
 const express = require("express");
-const fs = require('fs');
 const morgan = require('morgan');
+
+const tourRouter = require("./routes/tourRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -42,157 +44,6 @@ app.use((req, res, next) => {
   });
 */
 
-//##### ROUTE HANDLER ##########
-
-// Note when we call API event loop is working from app.get, so that we can read file at top, because its read once for all request.
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
-);
-
-const getTours = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      requestTime: req.requestTime,
-      result: tours.length,
-      data: {
-        // tours: tours  // In ES6 do not need to specify key and value at the same name.
-        tours,
-      }
-    });
-};
-
-// Get tour based on parameter id.
-
-// app.get("/nitours/v1/tours/:id/:x/:y?", (req, res) => {
-
-// Note: we can define n number of parameters in URL, by default all params are mendatory. add/suffix  question mark (?) to make
-// it as optional.
-const getSingleTour = (req, res) => {
-  console.log(req.params); // to get all parameter, param return all params as object.
-  const id = req.params.id * 1; // this is nice trick to convert string to number. Here req.param.id is string and converted in num.
-  const tour = tours.find(el => el.id === id);
-
-  // if(id > tours.length){
-  // if(typeof tour === 'undefined'){
-  if (!tour) {
-    res.status(404)
-      .json({ status: "fail", message: "InValid ID" });
-  }
-
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      data: {
-        tour
-      }
-    });
-};
-
-
-// To modify request data we need to use middleware. and need to define at top.
-const createTour = (req, res) => {
-  // console.log(req.body);
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body); // this will merge two object.
-
-  tours.push(newTour);
-  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
-    res.status(201).json({
-      status: "SUCCESS",
-      data: {
-        tour: tours,
-      }
-    })
-  });
-  // Note: status code 201 for created
-};
-
-// Update request.
-const updateTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    res.status(404)
-      .json({ status: "fail", message: "InValid ID" });
-  }
-
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      data: {
-        tour: "Updated data" // Just for placeholder, no need to build whole logic here.
-      }
-    });
-};
-
-
-// delete request.
-const deleteTour = (req, res) => {
-
-  if (req.params.id * 1 > tours.length) {
-    res.status(404)
-      .json({ status: "fail", message: "InValid ID" });
-  }
-
-  res
-    .status(204)
-    .json({
-      status: "SUCCESS",
-      data: null
-    });
-};
-
-const getUsers = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      data: "Get Users page"
-    });
-}
-
-const createUser = (req, res) => {
-  res.status(201).json({
-    status: "SUCCESS",
-    data: {
-      tour: "User created",
-    }
-  })
-}
-
-const getSingleUser = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      data: "Get Single User data"
-    });
-}
-
-const updateUser = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      data: {
-        tour: "Updated user" // Just for placeholder, no need to build whole logic here.
-      }
-    });
-}
-
-const deleteUser = (req, res) => {
-  res
-    .status(204)
-    .json({
-      status: "SUCCESS",
-      data: {
-        tour: "deleted user" // Just for placeholder, no need to build whole logic here.
-      }
-    });
-}
-
 //##### ROUTES ##########
 
 // Note: To refectoring the code, all routes are togather and handler are togather.
@@ -204,18 +55,6 @@ const deleteUser = (req, res) => {
     app.delete("/nitours/v1/tours/:id", deleteTour);
  */
 
-const tourRouter = express.Router(); // create a new route and save in tourRouter variable.
-const userRouter = express.Router();
-
-// Note in express we have route method to combine similar route togather.
-
-tourRouter.route("/").get(getTours).post(createTour);
-tourRouter.route("/:id").get(getSingleTour).patch(updateTour).delete(deleteTour);
-
-// User API's
-userRouter.route("/").get(getUsers).post(createUser);
-userRouter.route("/:id").get(getSingleUser).patch(updateUser).delete(deleteUser);
-
 // Mounting multiple Routers
 //Mounting the routers, has to come after all of these definitions or at least after we declared a variable.
 
@@ -223,8 +62,6 @@ app.use('/nitours/v1/tours', tourRouter); // connect new router (tourRouter) to 
 app.use('/api/v1/users', userRouter); // Can't use routers before we declare them.
 
 
-//##### SERVER START ##########
-const port = 3000;
-app.listen(port, () => {
-  console.log("App is running on port " + port);
-});
+// app.js is basically use for global middleware.
+
+module.exports = app;
