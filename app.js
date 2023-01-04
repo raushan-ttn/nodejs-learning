@@ -144,6 +144,55 @@ const deleteTour = (req, res) => {
     });
 };
 
+const getUsers = (req, res) => {
+  res
+    .status(200)
+    .json({
+      status: "SUCCESS",
+      data: "Get Users page"
+    });
+}
+
+const createUser = (req, res) => {
+  res.status(201).json({
+    status: "SUCCESS",
+    data: {
+      tour: "User created",
+    }
+  })
+}
+
+const getSingleUser = (req, res) => {
+  res
+    .status(200)
+    .json({
+      status: "SUCCESS",
+      data: "Get Single User data"
+    });
+}
+
+const updateUser = (req, res) => {
+  res
+    .status(200)
+    .json({
+      status: "SUCCESS",
+      data: {
+        tour: "Updated user" // Just for placeholder, no need to build whole logic here.
+      }
+    });
+}
+
+const deleteUser = (req, res) => {
+  res
+    .status(204)
+    .json({
+      status: "SUCCESS",
+      data: {
+        tour: "deleted user" // Just for placeholder, no need to build whole logic here.
+      }
+    });
+}
+
 //##### ROUTES ##########
 
 // Note: To refectoring the code, all routes are togather and handler are togather.
@@ -159,6 +208,10 @@ const deleteTour = (req, res) => {
 
 app.route("/nitours/v1/tours").get(getTours).post(createTour);
 app.route("/nitours/v1/tours/:id").get(getSingleTour).patch(updateTour).delete(deleteTour);
+
+// User API's
+app.route("/api/v1/users").get(getUsers).post(createUser);
+app.route("/api/v1/users/:id").get(getSingleUser).patch(updateUser).delete(deleteUser);
 
 
 
