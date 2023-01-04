@@ -1,8 +1,11 @@
-const { fail } = require("assert");
 const express = require("express");
 const fs = require('fs');
+const morgan = require('morgan');
 
 const app = express();
+
+//##### MIDDLEWARE ##########
+app.use(morgan('dev')); // third party middleware.
 
 app.use(express.json()); // this is middleware. this will provide value for "req.body", without this show undefined.
 
@@ -38,6 +41,9 @@ app.use((req, res, next) => {
     res.send("Hello world from POST API"); // status code 200 is by default.
   });
 */
+
+//##### ROUTE HANDLER ##########
+
 // Note when we call API event loop is working from app.get, so that we can read file at top, because its read once for all request.
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
@@ -138,6 +144,8 @@ const deleteTour = (req, res) => {
     });
 };
 
+//##### ROUTES ##########
+
 // Note: To refectoring the code, all routes are togather and handler are togather.
 /*
     app.get("/nitours/v1/tours/:id", getSingleTour);
@@ -154,8 +162,8 @@ app.route("/nitours/v1/tours/:id").get(getSingleTour).patch(updateTour).delete(d
 
 
 
+//##### SERVER START ##########
 const port = 3000;
-
 app.listen(port, () => {
   console.log("App is running on port " + port);
 });
