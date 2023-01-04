@@ -204,15 +204,23 @@ const deleteUser = (req, res) => {
     app.delete("/nitours/v1/tours/:id", deleteTour);
  */
 
+const tourRouter = express.Router(); // create a new route and save in tourRouter variable.
+const userRouter = express.Router();
+
 // Note in express we have route method to combine similar route togather.
 
-app.route("/nitours/v1/tours").get(getTours).post(createTour);
-app.route("/nitours/v1/tours/:id").get(getSingleTour).patch(updateTour).delete(deleteTour);
+tourRouter.route("/").get(getTours).post(createTour);
+tourRouter.route("/:id").get(getSingleTour).patch(updateTour).delete(deleteTour);
 
 // User API's
-app.route("/api/v1/users").get(getUsers).post(createUser);
-app.route("/api/v1/users/:id").get(getSingleUser).patch(updateUser).delete(deleteUser);
+userRouter.route("/").get(getUsers).post(createUser);
+userRouter.route("/:id").get(getSingleUser).patch(updateUser).delete(deleteUser);
 
+// Mounting multiple Routers
+//Mounting the routers, has to come after all of these definitions or at least after we declared a variable.
+
+app.use('/nitours/v1/tours', tourRouter); // connect new router (tourRouter) to application to use middleware.
+app.use('/api/v1/users', userRouter); // Can't use routers before we declare them.
 
 
 //##### SERVER START ##########
