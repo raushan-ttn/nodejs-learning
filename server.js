@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
-dotenv.config({ path: `./config.env` });
-const app = require("./app");
+
+dotenv.config({ path: './config.env' });
+const app = require('./app');
 
 // Set custom env variable in express, there is many ways like:
 // Steps => 1. stop running node server.
@@ -21,8 +22,9 @@ console.log(app.get('env')); // output: development
 // console.log(process.env);
 
 //##### SERVER START ##########
-const port = process.env.PORT || 3000; // with help of "process.env" get variable in any file, not only here.
+// with help of "process.env" get variable in any file, not only here.
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log("App is running on port " + port);
+  console.log(`App is running on port ${port}`);
 });
 
