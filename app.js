@@ -11,6 +11,10 @@ app.use(morgan('dev')); // third party middleware.
 
 app.use(express.json()); // this is middleware. this will provide value for "req.body", without this show undefined.
 
+// To server static file from server using middleWare.
+app.use(express.static(`${__dirname}/public`)); // Access files under "public directory" like 127.0.0.1/img/favicon.png
+
+
 // Create Custom MiddleWare.
 
 app.use((req1, res1, next) => { // params name up to you.
