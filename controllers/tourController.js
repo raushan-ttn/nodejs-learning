@@ -7,6 +7,15 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+exports.checkId = (req, res, next, val) => {
+  console.log(`Middleware Specific to Id: ${val}`);
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404)             // we must use return here, so that next will not call and api not send another response.
+      .json({ status: "fail", message: "InValid ID1" });
+  }
+  next();
+}
+
 exports.getTours = (req, res) => {
   res
     .status(200)
@@ -32,12 +41,14 @@ exports.getSingleTour = (req, res) => {
   const id = req.params.id * 1; // this is nice trick to convert string to number. Here req.param.id is string and converted in num.
   const tour = tours.find(el => el.id === id);
 
+  // Middleware created to check ID.
+
   // if(id > tours.length){
   // if(typeof tour === 'undefined'){
-  if (!tour) {
-    res.status(404)
-      .json({ status: "fail", message: "InValid ID" });
-  }
+  // if (!tour) {
+  //   res.status(404)
+  //     .json({ status: "fail", message: "InValid ID" });
+  // }
 
   res
     .status(200)
@@ -70,10 +81,12 @@ exports.createTour = (req, res) => {
 
 // Update request.
 exports.updateTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    res.status(404)
-      .json({ status: "fail", message: "InValid ID" });
-  }
+  // Middleware created to check ID.
+
+  // if (req.params.id * 1 > tours.length) {
+  //   res.status(404)
+  //     .json({ status: "fail", message: "InValid ID" });
+  // }
 
   res
     .status(200)
@@ -88,11 +101,12 @@ exports.updateTour = (req, res) => {
 
 // delete request.
 exports.deleteTour = (req, res) => {
+  // Middleware created to check ID.
 
-  if (req.params.id * 1 > tours.length) {
-    res.status(404)
-      .json({ status: "fail", message: "InValid ID" });
-  }
+  // if (req.params.id * 1 > tours.length) {
+  //   res.status(404)
+  //     .json({ status: "fail", message: "InValid ID" });
+  // }
 
   res
     .status(204)

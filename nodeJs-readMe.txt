@@ -78,3 +78,7 @@
 
 
 19. status code: code 200 means "OK" and  "201" means "created", and "404" means "notFound" and "204" means "contentNotAvailable".
+
+20. Each Router is mini sub application for each resource(tour, user ...).
+
+21.
