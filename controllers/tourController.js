@@ -2,9 +2,10 @@ const fs = require('fs');
 
 //##### ROUTE HANDLER ##########
 
-// Note when we call API event loop is working from app.get, so that we can read file at top, because its read once for all request.
+// Note when we call API event loop is working from app.get, so that we can read file at top,
+// because its read once for all request.
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`),
 );
 
 // MiddleWare created to validate ID before Get/Update/Delete.
@@ -16,7 +17,7 @@ exports.checkId = (req, res, next, val) => {
       .json({ status: 'fail', message: 'InValid ID1' });
   }
   next();
-}
+};
 
 // MiddleWare created to validate body before create data.
 exports.checkBody = (req, res, next) => {
@@ -46,12 +47,13 @@ exports.getTours = (req, res) => {
 
 // app.get("/nitours/v1/tours/:id/:x/:y?", (req, res) => {
 
-// Note: we can define n number of parameters in URL, by default all params are mendatory. add/suffix  question mark (?) to make
+// Note: we can define n number of parameters in URL, by default all params are mendatory.
+// add/suffix  question mark (?) to make
 // it as optional.
 exports.getSingleTour = (req, res) => {
   console.log(req.params); // to get all parameter, param return all params as object.
-  const id = req.params.id * 1; // this is nice trick to convert string to number. Here req.param.id is string and converted in num.
-  const tour = tours.find(el => el.id === id);
+  const id = req.params.id * 1; // this is nice trick to convert string to number.
+  const tour = tours.find((el) => el.id === id);
 
   // Middleware created to check ID.
 
@@ -65,13 +67,12 @@ exports.getSingleTour = (req, res) => {
   res
     .status(200)
     .json({
-      status: "SUCCESS",
+      status: 'SUCCESS',
       data: {
-        tour
-      }
+        tour,
+      },
     });
 };
-
 
 // To modify request data we need to use middleware. and need to define at top.
 exports.createTour = (req, res) => {
@@ -80,13 +81,13 @@ exports.createTour = (req, res) => {
   const newTour = Object.assign({ id: newId }, req.body); // this will merge two object.
 
   tours.push(newTour);
-  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), (err) => {
     res.status(201).json({
-      status: "SUCCESS",
+      status: 'SUCCESS',
       data: {
         tour: tours,
-      }
-    })
+      },
+    });
   });
   // Note: status code 201 for created
 };
@@ -103,13 +104,12 @@ exports.updateTour = (req, res) => {
   res
     .status(200)
     .json({
-      status: "SUCCESS",
+      status: 'SUCCESS',
       data: {
-        tour: "Updated data" // Just for placeholder, no need to build whole logic here.
-      }
+        tour: 'Updated data', // Just for placeholder, no need to build whole logic here.
+      },
     });
 };
-
 
 // delete request.
 exports.deleteTour = (req, res) => {
@@ -123,8 +123,7 @@ exports.deleteTour = (req, res) => {
   res
     .status(204)
     .json({
-      status: "SUCCESS",
-      data: null
+      status: 'SUCCESS',
+      data: null,
     });
 };
-
