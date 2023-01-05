@@ -20,13 +20,14 @@ const router = express.Router(); // create a new route and save in tourRouter va
 
 router.param("id",tourController.checkId);
 
-
 // Note in express we have route method to combine similar route togather.
 
 router
   .route("/")
   .get(tourController.getTours)
-  .post(tourController.createTour);
+  .post(tourController.checkBody, tourController.createTour); // we can pass specific middleWare to route, validate something before call API.
+
+  // Note: First "checkBody" will call then "createTour" handler will call. So we can do anything before handler call.
 
 router
   .route("/:id")

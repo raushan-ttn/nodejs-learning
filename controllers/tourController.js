@@ -7,6 +7,7 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+// MiddleWare created to validate ID before Get/Update/Delete.
 exports.checkId = (req, res, next, val) => {
   console.log(`Middleware Specific to Id: ${val}`);
   if (req.params.id * 1 > tours.length) {
@@ -15,6 +16,17 @@ exports.checkId = (req, res, next, val) => {
   }
   next();
 }
+
+// MiddleWare created to validate body before create data.
+exports.checkBody = (req, res, next) => {
+  console.log(`Middleware Specific to body!!!`);
+  if (!req.body.name || !req.body.price) {
+    return res.status(400)
+      .json({ status: "Fail", message: "InValid body (Missing Name OR Price) !!!" });
+  }
+  next();
+}
+
 
 exports.getTours = (req, res) => {
   res
