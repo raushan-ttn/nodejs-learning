@@ -7,7 +7,9 @@ const userRouter = require("./routes/userRoutes");
 const app = express();
 
 //##### MIDDLEWARE ##########
-app.use(morgan('dev')); // third party middleware.
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev')); // third party middleware. this will only call in developemnt mode not live mode.
+}
 
 app.use(express.json()); // this is middleware. this will provide value for "req.body", without this show undefined.
 

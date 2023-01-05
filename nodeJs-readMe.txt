@@ -81,4 +81,7 @@
 
 20. Each Router is mini sub application for each resource(tour, user ...).
 
-21.
+21. Environment variables are global variables that are used to define the environment in which a node app is running.
+    EveryThing not related to express we need to write in outside from app.js (LIKE server.js), the environment variables
+    are really outside the scope of Express.
+22.
