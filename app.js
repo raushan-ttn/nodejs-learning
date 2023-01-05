@@ -16,11 +16,10 @@ app.use(express.json()); // this is middleware. this will provide value for "req
 // To server static file from server using middleWare.
 app.use(express.static(`${__dirname}/public`)); // Access files under "public directory" like 127.0.0.1/img/favicon.png
 
-
 // Create Custom MiddleWare.
-
-app.use((req1, res1, next) => { // params name up to you.
-  console.log("This is our custom middleware!!!");
+// params name up to you.
+app.use((req1, res1, next) => {
+  console.log('This is our custom middleware!!!');
   next(); // next1/next function call next middleware in stack.
 });
 
@@ -28,7 +27,7 @@ app.use((req1, res1, next) => { // params name up to you.
 // If middleware code write after routes then this case request and response cycle will complete before this in that case middleware not call.
 
 app.use((req, res, next) => {
-  req.requestTime = `Time comes from middleware: ` + new Date().toISOString();
+  req.requestTime = `Time comes from middleware: ${new Date().toISOString()}`;
   next();
 });
 

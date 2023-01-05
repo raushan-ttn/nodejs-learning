@@ -11,34 +11,34 @@ const tours = JSON.parse(
 exports.checkId = (req, res, next, val) => {
   console.log(`Middleware Specific to Id: ${val}`);
   if (req.params.id * 1 > tours.length) {
-    return res.status(404)             // we must use return here, so that next will not call and api not send another response.
-      .json({ status: "fail", message: "InValid ID1" });
+    // we must use return here, so that next will not call and api not send another response.
+    return res.status(404)
+      .json({ status: 'fail', message: 'InValid ID1' });
   }
   next();
 }
 
 // MiddleWare created to validate body before create data.
 exports.checkBody = (req, res, next) => {
-  console.log(`Middleware Specific to body!!!`);
+  console.log('Middleware Specific to body!!!');
   if (!req.body.name || !req.body.price) {
     return res.status(400)
-      .json({ status: "Fail", message: "InValid body (Missing Name OR Price) !!!" });
+      .json({ status: 'Fail', message: 'InValid body (Missing Name OR Price) !!!' });
   }
   next();
-}
-
+};
 
 exports.getTours = (req, res) => {
   res
     .status(200)
     .json({
-      status: "SUCCESS",
+      status: 'SUCCESS',
       requestTime: req.requestTime,
       result: tours.length,
       data: {
         // tours: tours  // In ES6 do not need to specify key and value at the same name.
         tours,
-      }
+      },
     });
 };
 

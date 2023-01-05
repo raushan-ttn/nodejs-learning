@@ -84,4 +84,34 @@
 21. Environment variables are global variables that are used to define the environment in which a node app is running.
     EveryThing not related to express we need to write in outside from app.js (LIKE server.js), the environment variables
     are really outside the scope of Express.
-22.
+
+22. Some dev dependancy need to use/install every project and both config files parallel to package.json file.
+   npm i eslint eslint-config-airbnb eslint-plugin-node eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react --save-dev
+
+23. filename =>> .eslintrc.json
+
+             {
+                "extends": ["airbnb", "prettier", "plugin:node/recommended"],
+                "plugins": ["prettier"],
+                "rules": {
+                    "prettier/prettier": "error",
+                    "spaced-comment": "off",
+                    "no-console": "warn",
+                    "consistent-return": "off",
+                    "func-names": "off",
+                    "object-shorthand": "off",
+                    "no-process-exit": "off",
+                    "no-param-reassign": "off",
+                    "no-return-await": "off",
+                    "no-underscore-dangle": "off",
+                    "class-methods-use-this": "off",
+                    "prefer-destructuring": ["error", { "object": true, "array": false }],
+                    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
+                }
+             }
+
+24. filename =>>       .prettierrc
+              {
+                "singleQuote": true
+               }
+

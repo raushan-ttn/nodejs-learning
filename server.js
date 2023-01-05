@@ -15,11 +15,10 @@ const app = require("./app");
 // EveryThing not related to express we need to write in outside from app.js (LIKE server.js) the environment variables are really outside the scope of Express. #######
 
 // this env variable set by express, but NodeJs provides lots of env.
-    console.log(app.get('env')); // output: development
+console.log(app.get('env')); // output: development
 
 // NodeJs also provided env variables
-    // console.log(process.env);
-
+// console.log(process.env);
 
 //##### SERVER START ##########
 const port = process.env.PORT || 3000; // with help of "process.env" get variable in any file, not only here.
