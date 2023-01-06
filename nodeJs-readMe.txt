@@ -91,10 +91,10 @@
 23. filename =>> .eslintrc.json
 
              {
-                "extends": ["airbnb", "prettier", "plugin:node/recommended"],
-                "plugins": ["prettier"],
+                "extends": ["airbnb", "plugin:node/recommended"],
+                //"plugins": ["prettier"],
                 "rules": {
-                    "prettier/prettier": "error",
+                 //   "prettier/prettier": "error",
                     "spaced-comment": "off",
                     "no-console": "warn",
                     "consistent-return": "off",
@@ -110,8 +110,69 @@
                 }
              }
 
-24. filename =>>       .prettierrc
-              {
-                "singleQuote": true
-               }
+24. MongoDB is a document database with the scalability and flexibility that you want, and with the querying and indexing
+    that you need.
+     BSON: Data format MongoDB uses for data storage. Like JSON, but "Typed", So MongoDB documents are "Typed".
+          1.  MongoDB ==== Mysql
+              Collections === tables
+              documents ==== Rows
 
+          2. The maximum size for each document is currently 16 MB, but this might increase in the future.
+          3. Each document contains a unique ID, which acts as a primary key of that document. It's automatically generated
+             with the object ID data type each time there is a new document.
+
+25. Always use doubleQuote in JSON, because JSON not recognise singleQuote. AND in JS Always use singleQuote and "template litterals".
+
+26. MongoDB Helps:()
+                1. connect with mongo shell.
+                      $ mongo (if install mongodb)
+                      $ mongosh (if install mongod)
+                   // start server
+                      $ sudo systemctl restart mongod
+                   // Check port number
+                      $ sudo lsof -i | grep mongo
+                   // Check status
+                      $ sudo service mongod status
+
+                2. Create database
+                   > use tours_guide;
+
+                3. Insert data into collection. (data as similar as JS object, In format of BSON, doubleQuote in key not required).
+
+                   >db.tours_records.insertOne({name:"My test tour4",price:330,ratings:3.2});
+                   >db.tours_records.insertMany([{name:"My test tour7",price:430,ratings:5.2},{name:"My test tour6",price:510,ratings:4.2}]);
+
+                4. Select Data from collection.
+                > db.tours_records.find({name: "My test tour1"});
+
+                =>> AND Operator between two keys (this matchs exact value)
+                > db.tours_records.find({name: "My test tour1",ratings: 4.5});
+
+                =>> OR Operatods between two keys (this matchs exact value)
+                > db.tours_records.find({$or: [{name: "My test tour2"}, {ratings:4.5}] });
+                > db.tours_records.find({$or: [{name: "My test tour2"}, {ratings:{$gte:3.5}}] }); // grearter than equals to
+                > db.tours_records.find({$or: [{name: "My test tour2"}, {ratings:{$gt:4.2}}] }); // greater than
+
+
+                =>> show only specific columns from resulted document.
+                > db.tours_records.find({$or: [{name: "My test tour2"}, {ratings:{$gt:4.2}}] },{name:1}); // show only name
+
+                 5.Update Data from collection.
+                  > db.tours_records.updateOne({name: "My test tour2"},{$set:{ratings:1.5}}); // Here find "My test tour2" and update ratings.
+                  > db.tours_records.updateOne({name: "My test tour2"},{$set:{premium:true}}); // Add new field in existing document like "premium".
+                    // Note "$set" update existing field as well as create new one in existing document.
+                  >db.tours_records.updateMany({ ratings:{$gt:4.2}, {$set: {premium:true} } }); // Find and update multiple documents at sametime.
+
+                6. Replace the whole document.
+                 > db.tours_records.replaceOne({...})
+                 > db.tours_records.replaceMany({...})
+                7. DELETE the whole document.
+                  > db.tours_records.deleteOne({name:"My test tour4"});
+                  > db.tours_records.deleteMany({...});
+
+27. MongoDB tools (For UI => compass ) start from console: $ mongodb-compass
+                  =>>> install from here https://www.mongodb.com/docs/compass/current/install/
+                  =>>> if any problem found then run..
+                   $ sudo apt --fix-broken install
+
+28.

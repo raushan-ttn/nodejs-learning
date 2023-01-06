@@ -1,7 +1,22 @@
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 
 dotenv.config({ path: './config.env' });
 const app = require('./app');
+
+const DB = process.env.DATABASE_LOCAL;
+
+mongoose.connect(DB, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+}).then(() => {
+  // console.log(con.connections);
+  console.log('Database connected Successfully!!!');
+}).catch((err) => {
+  console.log(err);
+});
 
 // Set custom env variable in express, there is many ways like:
 // Steps => 1. stop running node server.
