@@ -35,20 +35,38 @@ const Tour = require('../models/tourModel');
     next();
   };
 */
-exports.getTours = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: 'SUCCESS',
-      requestTime: req.requestTime,
+/*
+  exports.getTours = (req, res) => {
+    res
+      .status(200)
+      .json({
+        status: 'SUCCESS',
+        requestTime: req.requestTime,
+        result: tours.length,
+        data: {
+          // tours: tours  // In ES6 do not need to specify key and value at the same name.
+          tours,
+        },
+      });
+  };
+*/
+exports.getTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: 'success',
       result: tours.length,
       data: {
-        // tours: tours  // In ES6 do not need to specify key and value at the same name.
         tours,
       },
     });
+  } catch (err) {
+    res.status(200).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
-
 // Get tour based on parameter id.
 
 // app.get("/nitours/v1/tours/:id/:x/:y?", (req, res) => {
@@ -56,29 +74,54 @@ exports.getTours = (req, res) => {
 // Note: we can define n number of parameters in URL, by default all params are mendatory.
 // add/suffix  question mark (?) to make
 // it as optional.
-exports.getSingleTour = (req, res) => {
-  console.log(req.params); // to get all parameter, param return all params as object.
-  const id = req.params.id * 1; // this is nice trick to convert string to number.
-  const tour = tours.find((el) => el.id === id);
 
-  // Middleware created to check ID.
+/*
+  exports.getSingleTour = (req, res) => {
+    console.log(req.params); // to get all parameter, param return all params as object.
+    const id = req.params.id * 1; // this is nice trick to convert string to number.
+    const tour = tours.find((el) => el.id === id);
 
-  // if(id > tours.length){
-  // if(typeof tour === 'undefined'){
-  // if (!tour) {
-  //   res.status(404)
-  //     .json({ status: "fail", message: "InValid ID" });
-  // }
+    // Middleware created to check ID.
 
-  res
-    .status(200)
-    .json({
-      status: 'SUCCESS',
-      data: {
-        tour,
-      },
-    });
+    // if(id > tours.length){
+    // if(typeof tour === 'undefined'){
+    // if (!tour) {
+    //   res.status(404)
+    //     .json({ status: "fail", message: "InValid ID" });
+    // }
+
+    res
+      .status(200)
+      .json({
+        status: 'SUCCESS',
+        data: {
+          tour,
+        },
+      });
+  };
+*/
+exports.getSingleTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+    // Tour.findOne({_id:req.params.id});
+    res
+      .status(200)
+      .json({
+        status: 'success',
+        data: {
+          tour,
+        },
+      });
+  } catch (err) {
+    res
+      .status(404)
+      .json({
+        status: 'fail',
+        message: err,
+      });
+  }
 };
+
 /*
   // To modify request data we need to use middleware. and need to define at top.
   exports.createTour = (req, res) => {
