@@ -175,4 +175,27 @@
                   =>>> if any problem found then run..
                    $ sudo apt --fix-broken install
 
-28.
+28. Mongoose : Mongoose is an object data modeling library for MongoDB and Node JS, providing a higher level of abstraction.mongoose
+               allows for rapid and simple development of mongodb database interactions.
+
+               MOngoose is all about models, and models is like blueprint the we use to create document.
+
+               Features: schemas to model data and relationships, eaisy data validation, Simple query API, middleware etc...
+
+               Mongoose Schemas: where we model our data, by describing the structure of the data, default values and validation.
+
+               Mongoose Model: a wrapper of schema, providing an interface to the database for the CRUD Operations.
+
+
+29. Always use Uppercase in model name, that's standard in programming.
+
+30. MVC : (Model, view, Controller)
+          Model : The model layer is concerned with everything about applications data, and the business logic.
+
+          Controller : The controller layer and the function of the controllers is to handle the application's request,
+                       interact with models, and send back responses to the client.
+
+          View : the view layer is necessary if we have a graphical interface in our app. Or in other words, if we're building
+                 a server-side rendered website,
+
+31.

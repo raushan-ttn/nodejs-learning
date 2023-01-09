@@ -11,7 +11,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // third party middleware. this will only call in developemnt mode not live mode.
 }
 
-app.use(express.json()); // this is middleware. this will provide value for "req.body", without this show undefined.
+// this is middleware. this will provide value for "req.body", without this show undefined.
+app.use(express.json());
 
 // To server static file from server using middleWare.
 app.use(express.static(`${__dirname}/public`)); // Access files under "public directory" like 127.0.0.1/img/favicon.png
