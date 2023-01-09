@@ -190,18 +190,23 @@ exports.updateTour = async (req, res) => {
 };
 
 // delete request.
-exports.deleteTour = (req, res) => {
-  // Middleware created to check ID.
-
-  // if (req.params.id * 1 > tours.length) {
-  //   res.status(404)
-  //     .json({ status: "fail", message: "InValid ID" });
-  // }
-
-  res
-    .status(204)
-    .json({
-      status: 'SUCCESS',
-      data: null,
-    });
+exports.deleteTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndDelete(req.params.id);
+    res
+      .status(204)
+      .json({
+        status: 'SUCCESS',
+        data: {
+          tour,
+        },
+      });
+  } catch (err) {
+    res
+      .status(500)
+      .json({
+        status: 'fail',
+        message: err,
+      });
+  }
 };
