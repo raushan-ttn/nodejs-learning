@@ -163,22 +163,30 @@ exports.createTour = async (req, res) => {
 };
 
 // Update request.
-exports.updateTour = (req, res) => {
+exports.updateTour = async (req, res) => {
   // Middleware created to check ID.
-
-  // if (req.params.id * 1 > tours.length) {
-  //   res.status(404)
-  //     .json({ status: "fail", message: "InValid ID" });
-  // }
-
-  res
-    .status(200)
-    .json({
-      status: 'SUCCESS',
-      data: {
-        tour: 'Updated data', // Just for placeholder, no need to build whole logic here.
-      },
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // pass some optional argument as per mongoose.
+      runValidators: true,
     });
+
+    res
+      .status(200)
+      .json({
+        status: 'success',
+        data: {
+          tour, // As per ES-6: property name has the same name of the value.
+        },
+      });
+  } catch (err) {
+    res
+      .status(400)
+      .json({
+        status: 'fail',
+        message: err,
+      });
+  }
 };
 
 // delete request.
