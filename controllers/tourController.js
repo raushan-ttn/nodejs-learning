@@ -52,7 +52,30 @@ const Tour = require('../models/tourModel');
 */
 exports.getTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // BUILD QUERY.
+    // ADD FILTER in query.
+    //console.log(req.query); // Output: { duration: '5', difficulty: 'easy' }
+    // NORMAL WAY, Without mongoose.
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'limit', 'sort', 'fields'];
+    excludedFields.forEach((el) => { delete queryObj[el]; });
+    // console.log(queryObj);
+    console.log(queryObj);
+
+    const query = Tour.find(queryObj); // find method return query, so that -
+    // We can not apply below mongoose method (sort, limit, where, lte, lt) directly on query.
+
+    // ANother way, Mongoose Method.
+    // const query = Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+
+    // EXECUTE Query.
+    const tours = await query; // here query executes and return promise.
+
+    // SEND Response.
     res.status(200).json({
       status: 'success',
       result: tours.length,
@@ -61,7 +84,7 @@ exports.getTours = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(200).json({
+    res.status(400).json({
       status: 'fail',
       message: err,
     });
