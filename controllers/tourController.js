@@ -35,6 +35,15 @@ const Tour = require('../models/tourModel');
     next();
   };
 */
+
+// Middleware create for aliasTopFive.
+exports.aliasTopFive = (req, res, next) => {
+  req.query.limit = 5;
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,summary,ratingsAverage';
+  next();
+};
+
 /*
   exports.getTours = (req, res) => {
     res
@@ -92,7 +101,7 @@ exports.getTours = async (req, res) => {
       query = query.sort('-duration');
     }
 
-    // Fields - select fields from documents.
+    // 3) Fields - select fields from documents.
     if (req.query.fields) {
       const fields = req.query.fields.split(',').join(' ');
       console.log(fields);
@@ -104,19 +113,34 @@ exports.getTours = async (req, res) => {
       // (/nitours/v1/tours?fields=-price,-ratingsAverage,-name)
     }
 
+    // 4) Paginations
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+
+    const skip = (page - 1) * limit;
+    query.skip(skip).limit(limit);
+
+    let tourNumCount = 0;
+    if (req.query.page || req.query.limit) {
+      tourNumCount = await Tour.countDocuments();
+      if (skip > tourNumCount) throw new Error('Page not exists!!!');
+    }
+
     // EXECUTE Query.
     const tours = await query; // here query executes and return promise.
+    // query.sort().select().skip().limit()
 
     // SEND Response.
     res.status(200).json({
       status: 'success',
+      totalResult: (tourNumCount > 0) ? tourNumCount : tours.length,
       result: tours.length,
       data: {
         tours,
       },
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(404).json({
       status: 'fail',
       message: err,
     });
