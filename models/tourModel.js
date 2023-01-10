@@ -61,7 +61,20 @@ const tourSchema = new mongoose.Schema({
     default: Date.now(),
     select: false, // select false: means pernanently hide from select.
   },
+}, {
+  toJSON: { virtuals: true }, // this Options are helps to show "virtual field" in API as field.
+  toObject: { virtuals: true },
 });
+
+// virtual properties.
+tourSchema.virtual('durationweek').get(function () { // normal function becoz we need to use this keyword.
+  return this.duration / 7;
+});
+
+// virtual fields are not part of schema, this will generate eachtime when we call modal.
+// So that Tour.find({durationweek : 1}) // this type of query will not work.
+// this is not best practice, we need to separate bussiness logic and application logic as much -
+// as separated as possible.
 
 // Create modal (Tour), variableName and modal name always Uppercase.
 const Tour = mongoose.model('Tour', tourSchema);
