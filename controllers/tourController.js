@@ -1,6 +1,7 @@
 //const fs = require('fs');
 const mongoose = require('mongoose');
 const Tour = require('../models/tourModel');
+const ApiFeatures = require('../utils/apiFeatures');
 
 //##### ROUTE HANDLER ##########
 
@@ -59,31 +60,35 @@ exports.aliasTopFive = (req, res, next) => {
       });
   };
 */
+
 exports.getTours = async (req, res) => {
   try {
     // BUILD QUERY.
     // 1A) ADD FILTER in query.
     //console.log(req.query); // Output: { duration: '5', difficulty: 'easy' }
     // NORMAL WAY, Without mongoose.
-    const queryObj = { ...req.query };
-    const excludedFields = ['page', 'limit', 'sort', 'fields'];
-    excludedFields.forEach((el) => { delete queryObj[el]; });
-    // console.log(queryObj);
+    /*
+        const queryObj = { ...req.query };
+        const excludedFields = ['page', 'limit', 'sort', 'fields'];
+        excludedFields.forEach((el) => { delete queryObj[el]; });
+        // console.log(queryObj);
 
-    // const query = Tour.find(queryObj); // find method return query, so that -
-    // We can not apply below mongoose method (sort, limit, where, lte, lt) directly on query.
+        // const query = Tour.find(queryObj); // find method return query, so that -
+        // We can not apply below mongoose method (sort, limit, where, lte, lt) directly on query.
 
-    // ANother way, Mongoose Method.
-    // const query = Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
+        // ANother way, Mongoose Method.
+        // const query = Tour.find()
+        //   .where('duration')
+        //   .equals(5)
+        //   .where('difficulty')
+        //   .equals('easy');
 
-    // 1B) ADVANCE FILTER
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    let query = Tour.find(JSON.parse(queryStr));
+        // 1B) ADVANCE FILTER
+        let queryStr = JSON.stringify(queryObj);
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+        let query = Tour.find(JSON.parse(queryStr));
+     */
+
     // Params: /nitours/v1/tours?duration[gte]=5&difficulty=easy&page=1&price[lt]=1500
     // { duration: { gte: '5' }, difficulty: 'easy' }
 
@@ -92,44 +97,54 @@ exports.getTours = async (req, res) => {
     // will work for both cases.
 
     // /nitours/v1/tours?sort=-price :  add minus before value to sort by desc.
-
-    if (req.query.sort) {
-      // multiple sort togather.
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-duration');
-    }
-
+    /*
+        if (req.query.sort) {
+          // multiple sort togather.
+          const sortBy = req.query.sort.split(',').join(' ');
+          query = query.sort(sortBy);
+        } else {
+          query = query.sort('-duration');
+        }
+     */
     // 3) Fields - select fields from documents.
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      console.log(fields);
-      query = query.select(fields);
-    } else {
-      query = query.select('-__v');
-      // prefix minus (-) excludes this fields.
-      // if we select/deselect 3 fields pass minus (-) for all not only one
-      // (/nitours/v1/tours?fields=-price,-ratingsAverage,-name)
-    }
-
+    /*
+        if (req.query.fields) {
+          const fields = req.query.fields.split(',').join(' ');
+          console.log(fields);
+          query = query.select(fields);
+        } else {
+          query = query.select('-__v');
+          // prefix minus (-) excludes this fields.
+          // if we select/deselect 3 fields pass minus (-) for all not only one
+          // (/nitours/v1/tours?fields=-price,-ratingsAverage,-name)
+        }
+   */
     // 4) Paginations
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 100;
+    /*
+        const page = req.query.page * 1 || 1;
+        const limit = req.query.limit * 1 || 100;
 
-    const skip = (page - 1) * limit;
-    query.skip(skip).limit(limit);
+        const skip = (page - 1) * limit;
+        query.skip(skip).limit(limit);
+    */
 
     let tourNumCount = 0;
     if (req.query.page || req.query.limit) {
       tourNumCount = await Tour.countDocuments();
-      if (skip > tourNumCount) throw new Error('Page not exists!!!');
+      // if (skip > tourNumCount) throw new Error('Page not exists!!!');
     }
 
     // EXECUTE Query.
-    const tours = await query; // here query executes and return promise.
-    // query.sort().select().skip().limit()
-
+    /*
+        const tours = await query; // here query executes and return promise.
+        // query.sort().select().skip().limit()
+   */
+    const features = new ApiFeatures(Tour.find(), req.query)
+      .filters()
+      .sort()
+      .limitFields()
+      .pagination(); // create query
+    const tours = await features.query; // here query executes and return promise.
     // SEND Response.
     res.status(200).json({
       status: 'success',
