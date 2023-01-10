@@ -53,14 +53,13 @@ const Tour = require('../models/tourModel');
 exports.getTours = async (req, res) => {
   try {
     // BUILD QUERY.
-    // ADD FILTER in query.
+    // 1A) ADD FILTER in query.
     //console.log(req.query); // Output: { duration: '5', difficulty: 'easy' }
     // NORMAL WAY, Without mongoose.
     const queryObj = { ...req.query };
     const excludedFields = ['page', 'limit', 'sort', 'fields'];
     excludedFields.forEach((el) => { delete queryObj[el]; });
     // console.log(queryObj);
-    console.log(queryObj);
 
     // const query = Tour.find(queryObj); // find method return query, so that -
     // We can not apply below mongoose method (sort, limit, where, lte, lt) directly on query.
@@ -72,12 +71,27 @@ exports.getTours = async (req, res) => {
     //   .where('difficulty')
     //   .equals('easy');
 
-    // ADVANCE FILTER
+    // 1B) ADVANCE FILTER
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    const query = Tour.find(JSON.parse(queryStr));
+    let query = Tour.find(JSON.parse(queryStr));
     // Params: /nitours/v1/tours?duration[gte]=5&difficulty=easy&page=1&price[lt]=1500
     // { duration: { gte: '5' }, difficulty: 'easy' }
+
+    // 2) SORTING
+    // Mongoose(Tour.find()) Or (Normal) Tour.find() both return query, so that mongoose method -
+    // will work for both cases.
+
+    // /nitours/v1/tours?sort=-price :  add minus before value to sort by desc.
+
+    if (req.query.sort) {
+      // multiple sort togather.
+      const sortBy = req.query.sort.split(',').join(' ');
+      console.log(sortBy);
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-duration');
+    }
 
     // EXECUTE Query.
     const tours = await query; // here query executes and return promise.
