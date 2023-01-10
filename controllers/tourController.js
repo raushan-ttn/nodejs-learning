@@ -302,3 +302,44 @@ exports.deleteTour = async (req, res) => {
       });
   }
 };
+
+// Aggregation pipeline: Matching and Grouping.
+
+exports.getToursStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } }, // kind of where conditions
+      },
+      {
+        $group: {
+          // _id: null,
+          // _id: '$ratingsQuantity', // we can group based on fields.
+          _id: '$difficulty',
+          numTours: { $sum: 1 }, // kind of fields to show in output group by '_id' fields.
+          numRatings: { $sum: '$ratingsQuantity' },
+          avgRating: { $sum: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+    ]);
+
+    res
+      .status(200)
+      .json({
+        status: 'SUCCESS',
+        data: {
+          stats,
+        },
+      });
+  } catch (err) {
+    res
+      .status(404)
+      .json({
+        status: 'fail',
+        message: err,
+      });
+  }
+};

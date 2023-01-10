@@ -20,6 +20,7 @@ const router = express.Router(); // create a new route and save in tourRouter va
 // router.param("id",tourController.checkId);
 
 router.route('/top-5-tours').get(tourController.aliasTopFive, tourController.getTours);
+router.route('/tour-stats').get(tourController.getToursStats);
 
 // Note in express we have route method to combine similar route togather.
 
