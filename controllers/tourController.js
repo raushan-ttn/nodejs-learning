@@ -87,10 +87,21 @@ exports.getTours = async (req, res) => {
     if (req.query.sort) {
       // multiple sort togather.
       const sortBy = req.query.sort.split(',').join(' ');
-      console.log(sortBy);
       query = query.sort(sortBy);
     } else {
       query = query.sort('-duration');
+    }
+
+    // Fields - select fields from documents.
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      console.log(fields);
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
+      // prefix minus (-) excludes this fields.
+      // if we select/deselect 3 fields pass minus (-) for all not only one
+      // (/nitours/v1/tours?fields=-price,-ratingsAverage,-name)
     }
 
     // EXECUTE Query.

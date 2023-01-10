@@ -56,7 +56,11 @@ const tourSchema = new mongoose.Schema({
   },
   images: [String],
   startDates: [Date],
-
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+    select: false, // select false: means pernanently hide from select.
+  },
 });
 
 // Create modal (Tour), variableName and modal name always Uppercase.
