@@ -62,7 +62,7 @@ exports.getTours = async (req, res) => {
     // console.log(queryObj);
     console.log(queryObj);
 
-    const query = Tour.find(queryObj); // find method return query, so that -
+    // const query = Tour.find(queryObj); // find method return query, so that -
     // We can not apply below mongoose method (sort, limit, where, lte, lt) directly on query.
 
     // ANother way, Mongoose Method.
@@ -71,6 +71,13 @@ exports.getTours = async (req, res) => {
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
+
+    // ADVANCE FILTER
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    const query = Tour.find(JSON.parse(queryStr));
+    // Params: /nitours/v1/tours?duration[gte]=5&difficulty=easy&page=1&price[lt]=1500
+    // { duration: { gte: '5' }, difficulty: 'easy' }
 
     // EXECUTE Query.
     const tours = await query; // here query executes and return promise.
