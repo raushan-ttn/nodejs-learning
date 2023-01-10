@@ -21,6 +21,7 @@ const router = express.Router(); // create a new route and save in tourRouter va
 
 router.route('/top-5-tours').get(tourController.aliasTopFive, tourController.getTours);
 router.route('/tour-stats').get(tourController.getToursStats);
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 // Note in express we have route method to combine similar route togather.
 

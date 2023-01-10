@@ -198,4 +198,6 @@
           View : the view layer is necessary if we have a graphical interface in our app. Or in other words, if we're building
                  a server-side rendered website,
 
-31.
+31. unwind : unwind is gonna do is basically deconstruct an array field from the info documents and then output one document for each element of the array.
+
+32.
