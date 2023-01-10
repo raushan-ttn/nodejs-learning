@@ -315,7 +315,7 @@ exports.getToursStats = async (req, res) => {
         $group: {
           // _id: null,
           // _id: '$ratingsQuantity', // we can group based on fields.
-          _id: '$difficulty',
+          _id: { $toUpper: '$difficulty' }, // for upper case.
           numTours: { $sum: 1 }, // kind of fields to show in output group by '_id' fields.
           numRatings: { $sum: '$ratingsQuantity' },
           avgRating: { $sum: '$ratingsAverage' },
@@ -323,6 +323,12 @@ exports.getToursStats = async (req, res) => {
           minPrice: { $min: '$price' },
           maxPrice: { $max: '$price' },
         },
+      },
+      {
+        $sort: { avgPrice: -1 }, // 1 for ASC and -1 for DESC
+      },
+      {
+        $match: { _id: { $ne: 'EASY' } }, // Exculde EASY from difficulty.
       },
     ]);
 
