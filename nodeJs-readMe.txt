@@ -206,3 +206,7 @@
                                        save command is issued and the actual saving of the document, or also after the actual saving.
 
 33. DOCUMENT MIDDLEWARE: runs before .create() and .save() not work before .insertMany().
+34. QUERY MIDDLEWARE: allows us to run functions before or after a certain query is executed. This will work with "find"
+                      hook and "this" will hold current query.
+
+35.

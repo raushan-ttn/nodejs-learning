@@ -63,6 +63,10 @@ const tourSchema = new mongoose.Schema({
     default: Date.now(),
     select: false, // select false: means pernanently hide from select.
   },
+  secretTour: {
+    type: Boolean,
+    default: false,
+  },
 }, {
   toJSON: { virtuals: true }, // this Options are helps to show "virtual field" in API as field.
   toObject: { virtuals: true },
@@ -79,6 +83,7 @@ tourSchema.virtual('durationweek').get(function () { // normal function becoz we
 // as separated as possible.
 
 // DOCUMENT MIDDLEWARE: runs before .create() and .save() not work before .insertMany().
+// DOCUMENT MIDDLEWARE: also work with "remove" and "validate" along with "save".
 tourSchema.pre('save', function (next) {
   console.log(this); //this only hold the processed document.
   next();
@@ -90,9 +95,28 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-// this not available in .post(), only doc and next available.
+// "this" not available in .post(), only doc and next available.
 tourSchema.post('save', (doc, next) => {
   console.log(doc);
+  next();
+});
+
+// QUERY MIDDLEWARE: This will work with "find" hook and "this" will hold current query.
+// QUERY MIDDLEWARE: also work with "count", "all types of find", "remove" and "all types of Update"
+
+// tourSchema.pre('find', function (next) {
+tourSchema.pre(/^find/, function (next) { // working with all the commands start with "find".
+  this.find({ secretTour: { $ne: true } }); // this will alter the query before execute.
+
+  this.start = Date.now(); // Set time for query start in miliSeconds.
+  console.log(this);
+  next();
+});
+
+// "this" available in "post" QUERY MIDDLEWARE.
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(docs);
+  console.log(`Query tooks time: ${Date.now() - this.start} in milliSeconds!!!`);
   next();
 });
 
