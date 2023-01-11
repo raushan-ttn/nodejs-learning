@@ -200,4 +200,9 @@
 
 31. unwind : unwind is gonna do is basically deconstruct an array field from the info documents and then output one document for each element of the array.
 
-32.
+32. Mongoose Middleware: Mongoose middleware is also called pre and post hooks. there are 4 types of middleware in mongoose:-
+                         document, query, aggregate, and model middleware.
+                         For example:  each time a new document is saved to the database, we can run a function between the
+                                       save command is issued and the actual saving of the document, or also after the actual saving.
+
+33. DOCUMENT MIDDLEWARE: runs before .create() and .save() not work before .insertMany().

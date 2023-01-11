@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 // Create Schema/collection using mongoose.
 const tourSchema = new mongoose.Schema({
@@ -11,6 +12,7 @@ const tourSchema = new mongoose.Schema({
     minlength: [10, 'A tour name must have more or equal then 10 characters'],
     // validate: [validator.isAlpha, 'Tour name must only contain characters']
   },
+  slug: String,
   duration: {
     type: Number,
     required: [true, 'A tour must have a duration'],
@@ -75,6 +77,13 @@ tourSchema.virtual('durationweek').get(function () { // normal function becoz we
 // So that Tour.find({durationweek : 1}) // this type of query will not work.
 // this is not best practice, we need to separate bussiness logic and application logic as much -
 // as separated as possible.
+
+// DOCUMENT MIDDLEWARE: runs before .create() and .save() not work before .insertMany().
+tourSchema.pre('save', function (next) {
+  // console.log(this); this only hold the processed document.
+  this.slug = slugify(this.name, { lower: true }); // CALL ANOTHER MIDDLEWARE INSIDE THIS.
+  next();
+});
 
 // Create modal (Tour), variableName and modal name always Uppercase.
 const Tour = mongoose.model('Tour', tourSchema);
