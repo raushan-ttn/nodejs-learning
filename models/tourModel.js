@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const validator = require('validator');
 
 // Create Schema/collection using mongoose.
 const tourSchema = new mongoose.Schema({
@@ -10,7 +11,8 @@ const tourSchema = new mongoose.Schema({
     trim: true,
     maxlength: [40, 'A tour name must have less or equal then 40 characters'],
     minlength: [10, 'A tour name must have more or equal then 10 characters'],
-    // validate: [validator.isAlpha, 'Tour name must only contain characters']
+    // third party validators,
+    // validate: [validator.isAlpha, 'Tour name must only contain characters.'],
   },
   slug: String,
   duration: {
@@ -42,6 +44,17 @@ const tourSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, 'A tour must have a price'],
+  },
+  priceDiscount: {
+    type: Number,
+    validate: { // custom validator: is function which is return "true" or "false".
+      validator: function (val) {
+        // This only points to current doc on NEW document creation. becoz "this" keyword.
+        // There are multiple custom library available in npm, we can also use them.
+        return val < this.price;
+      },
+      message: 'priceDiscount ({VALUE}) must be less than Price!!!',
+    },
   },
   summary: {
     type: String,
@@ -127,6 +140,8 @@ tourSchema.pre('aggregate', function (next) {
   console.log(this.pipeline()); // show the pipline of aggregation.
   next();
 });
+
+//
 
 // Create modal (Tour), variableName and modal name always Uppercase.
 const Tour = mongoose.model('Tour', tourSchema);

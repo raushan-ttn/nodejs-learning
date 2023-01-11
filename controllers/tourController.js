@@ -262,7 +262,7 @@ exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
       new: true, // pass some optional argument as per mongoose.
-      runValidators: true,
+      runValidators: true, // this will support schema validators in model.
     });
 
     res
