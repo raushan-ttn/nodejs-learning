@@ -80,8 +80,19 @@ tourSchema.virtual('durationweek').get(function () { // normal function becoz we
 
 // DOCUMENT MIDDLEWARE: runs before .create() and .save() not work before .insertMany().
 tourSchema.pre('save', function (next) {
+  console.log(this); //this only hold the processed document.
+  next();
+});
+// We can use multiple "pre" hook/MIDDLEWARE togather.
+tourSchema.pre('save', function (next) {
   // console.log(this); this only hold the processed document.
   this.slug = slugify(this.name, { lower: true }); // CALL ANOTHER MIDDLEWARE INSIDE THIS.
+  next();
+});
+
+// this not available in .post(), only doc and next available.
+tourSchema.post('save', (doc, next) => {
+  console.log(doc);
   next();
 });
 
