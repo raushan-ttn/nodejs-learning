@@ -120,6 +120,14 @@ tourSchema.post(/^find/, function (docs, next) {
   next();
 });
 
+// AGGREGATE MIDDLEWARE:
+tourSchema.pre('aggregate', function (next) {
+  // this will add extra match in pipeline.
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  console.log(this.pipeline()); // show the pipline of aggregation.
+  next();
+});
+
 // Create modal (Tour), variableName and modal name always Uppercase.
 const Tour = mongoose.model('Tour', tourSchema);
 
