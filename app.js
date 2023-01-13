@@ -1,9 +1,10 @@
 const express = require("express");
 const morgan = require('morgan');
+const AppError = require('./utils/appError');
 
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
-
+const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 //##### MIDDLEWARE ##########
@@ -72,11 +73,29 @@ app.use('/api/v1/users', userRouter); // Can't use routers before we declare the
 // that means response cycle not completed yet, and then this will BY DEfault 404.
 
 app.all('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: `Can't find URL ${req.originalUrl} on this Server!!!`,
-  });
+
+  /*
+      res.status(404).json({
+          status: 'fail',
+          message: `Can't find URL ${req.originalUrl} on this Server!!!`,
+        });
+    */
+
+  /*
+    // CREATE ERROR: we don't need to write here, we need to write own Error class.
+    const err = new Error(`Can't find URL ${req.originalUrl} on this Server!!!`);
+    err.status = 'fail';
+    err.statusCode = 404;
+    next(err);
+  // basically next() use for jump to error middleware.next() accept argument no matter what it is.
+*/
+  // This will handle Error.
+  next(new AppError(`Can't find URL ${req.originalUrl} on this Server!!!`, 404));
 });
+
+// ERROR HANDLING MIDDLEWARE.
+
+app.use(globalErrorHandler);
 
 // app.js is basically use for global middleware.
 
