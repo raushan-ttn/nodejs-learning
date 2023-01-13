@@ -67,6 +67,16 @@ app.use((req, res, next) => {
 app.use('/nitours/v1/tours', tourRouter); // connect new router (tourRouter) to application to use middleware.
 app.use('/api/v1/users', userRouter); // Can't use routers before we declare them.
 
+// CREATE a middleware to handle 404 request for all (get/post/put/patch/delete).
+// THIS MIDDLEWARE AT END OF app.js file, and if any request not match the above specified URL.
+// that means response cycle not completed yet, and then this will BY DEfault 404.
+
+app.all('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'fail',
+    message: `Can't find URL ${req.originalUrl} on this Server!!!`,
+  });
+});
 
 // app.js is basically use for global middleware.
 
