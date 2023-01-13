@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const Tour = require('../models/tourModel');
 const ApiFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 
 //##### ROUTE HANDLER ##########
 
@@ -194,10 +195,16 @@ exports.getTours = async (req, res) => {
       });
   };
 */
-exports.getSingleTour = async (req, res) => {
+// We can get "req/res/next" arguments for each route.
+exports.getSingleTour = async (req, res, next) => {
   try {
     const tour = await Tour.findById(req.params.id);
     // Tour.findOne({_id:req.params.id});
+    if (!tour) {
+      // next() jump to globalErrorHandler middleware.
+      return next(new AppError('No tour found', 404));
+    }
+
     res
       .status(200)
       .json({
