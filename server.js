@@ -6,6 +6,11 @@ const app = require('./app');
 
 const DB = process.env.DATABASE_LOCAL;
 
+// Display Query on console for each request.
+mongoose.set('debug', (collectionName, method, query, doc) => {
+  console.log(`${collectionName}.${method}`, JSON.stringify(query), doc);
+});
+
 mongoose.connect(DB, {
   useNewUrlParser: true,
   useCreateIndex: true,
