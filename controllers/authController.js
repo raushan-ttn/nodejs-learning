@@ -1,6 +1,8 @@
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 
+// catchAsync() function accept async function and handle catch(). so that we don't
+// need to add catch() here.
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create(req.body);
 

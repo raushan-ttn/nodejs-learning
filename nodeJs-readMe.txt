@@ -210,3 +210,16 @@
                       hook and "this" will hold current query.
 
 35.uncaught exceptions : all errors, or let's also call them bugs, that occur in our synchronous code but are not handled anywhere are called uncaught exceptions.
+
+36.JWT (JSON WEB TOKENS) : JWT is combination of 3 things (Header + Payload + signature): Header and Payload is simple string we can decode this.
+                           But the signature is combination of (Header + Payload + secrete (storeed on server)).
+
+   // Process to Signin => User pass correct email and password through web API, first server check user exist or not. then validate user
+                           with password if validated true, then create a screte key and store on server and based on secret key generated
+                           token and send to client(browser). and client store this key to cookies/localStorage.
+                           If any one try to alter this token and send back to server, then the server fist get (Header + payload) from token
+                           and with help of stored secret key create temporory signature and validate temporory signature to original (come from request)
+                           if both signature match then token not altered otherwise token altered.
+
+
+
