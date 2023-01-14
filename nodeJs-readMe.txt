@@ -209,4 +209,4 @@
 34. QUERY MIDDLEWARE: allows us to run functions before or after a certain query is executed. This will work with "find"
                       hook and "this" will hold current query.
 
-35.
+35.uncaught exceptions : all errors, or let's also call them bugs, that occur in our synchronous code but are not handled anywhere are called uncaught exceptions.

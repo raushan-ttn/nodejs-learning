@@ -6,6 +6,17 @@ const app = require('./app');
 
 const DB = process.env.DATABASE_LOCAL;
 
+// this handler will be very top in application, because it catch all "uncaughtException",
+// If this will be at bottom then it will not catch and getting error.
+process.on('uncaughtException', (err) => {
+  console.log('uncaughtException ! Shutting Down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+// console.log(x); // example to reproduce "uncaughtException".
+// if we paste "console.log(x);" inside MIDDLEWARE then this will show error when route call.
+// Becoz middleware calls when we call route.
+
 // Display Query on console for each request.
 mongoose.set('debug', (collectionName, method, query, doc) => {
   console.log(`${collectionName}.${method}`, JSON.stringify(query), doc);
@@ -49,3 +60,16 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App is running on port ${port}`);
 });
+
+// unhandledRejection: is event and we need to handle here.
+process.on('unhandledRejection', (err) => {
+  console.log('UNHANDLED REJECTION! Shutting down...');
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1); // 0 = success and 1 = exception
+  });
+});
+
+// Note: In nodeJs this is not good practice to blindly relay on this two error handlers
+// ("unhandledRejection" and "uncaughtException")
+//
