@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter password.'],
     minlength: 8,
+    select: false, // hide "password" field from any find query.
   },
   confirmpassword: {
     type: String,
@@ -50,6 +51,13 @@ userSchema.pre('save', async function (next) {
   this.confirmpassword = undefined; // basically do not need to store confirmpass in DB.
   // this is just for validation purpose only.
 });
+
+// we can't do manually becoz "candidatePassword" is not hashed and "userPassword" is encrypted.
+// compare() function return "true" if both password matched.
+// this method is type of instance method, it will available with all documents.
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 const User = mongoose.model('User', userSchema);
 

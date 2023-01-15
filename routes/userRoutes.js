@@ -8,6 +8,7 @@ const router = express.Router();
 // that do not 100 % fit that REST philosophy/architecture.
 
 router.post('/signup', authController.signup);
+router.post('/login', authController.login);
 
 // User API's
 router
