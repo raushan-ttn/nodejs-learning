@@ -94,6 +94,7 @@ exports.protectTours = catchAsync(async (req, res, next) => {
   }
 
   // GRANT Access to PROTECTED ROUTE.
-  req.user = currentUser; // if code reach this point, that means every things correct.
+  req.user = currentUser;
+  // if we pass data from one middleware to another then simply put into request object.
   next();
 });
