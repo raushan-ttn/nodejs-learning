@@ -221,5 +221,5 @@
                            and with help of stored secret key create temporory signature and validate temporory signature to original (come from request)
                            if both signature match then token not altered otherwise token altered.
 
-
+37. JWT_SECRET: Using HSA 256 encryption algorithem and should at least be 32 characters long.
 
