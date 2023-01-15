@@ -1,3 +1,4 @@
+const { promisify } = require('util'); // NodeJs core module.
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
@@ -16,6 +17,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     confirmpassword: req.body.confirmpassword,
+    passwordChangedAt: req.body.passwordChangedAt,
   });
 
   // CREATE TOKEN.
@@ -61,4 +63,37 @@ exports.login = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
   });
+});
+
+// MIDDLEWARE for GetAllTours: loggedin user only.
+exports.protectTours = catchAsync(async (req, res, next) => {
+  let token;
+  // Getting token and check it's there.
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  if (!token) {
+    // ERROR Code "401" means request is correct but data is not sufficient.
+    return next(new AppError('You are not logged in! please log in to get access.', 401));
+  }
+  // Verification token.
+  // promisify accept function as argument and return a function as well. LIKE "Currying"
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  // check if user still exists
+  const freshUser = await User.findById(decoded.id);
+  if (!freshUser) {
+    // UseCase: user is using correct token, but suppose somehow deleted from system.
+    // In that case check userId and throw error.
+    return next(new AppError('the user belonging to this token no longer exists.', 401));
+  }
+
+  // check if user changed password after the token was issued.
+  if (freshUser.changedPasswordAfter(decoded.iat)) { // "iat" means issued at.
+    return next(new AppError('User recently changed there password, Please login again!!!', 401));
+  }
+
+  // GRANT Access to PROTECTED ROUTE.
+  req.user = freshUser; // if code reach this point, that means every things correct.
+  next();
 });

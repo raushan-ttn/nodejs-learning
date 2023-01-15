@@ -97,10 +97,12 @@ tourSchema.virtual('durationweek').get(function () { // normal function becoz we
 
 // DOCUMENT MIDDLEWARE: runs before .create() and .save() not work before .insertMany().
 // DOCUMENT MIDDLEWARE: also work with "remove" and "validate" along with "save".
-tourSchema.pre('save', function (next) {
-  console.log(this); //this only hold the processed document.
-  next();
-});
+/*
+    tourSchema.pre('save', function (next) {
+      // console.log(this); //this only hold the processed document.
+      next();
+    });
+*/
 // We can use multiple "pre" hook/MIDDLEWARE togather.
 tourSchema.pre('save', function (next) {
   // console.log(this); this only hold the processed document.
@@ -109,10 +111,12 @@ tourSchema.pre('save', function (next) {
 });
 
 // "this" not available in .post(), only doc and next available.
-tourSchema.post('save', (doc, next) => {
-  console.log(doc);
-  next();
-});
+/*
+    tourSchema.post('save', (doc, next) => {
+      console.log(doc);
+      next();
+    });
+*/
 
 // QUERY MIDDLEWARE: This will work with "find" hook and "this" will hold current query.
 // QUERY MIDDLEWARE: also work with "count", "all types of find", "remove" and "all types of Update"
@@ -122,13 +126,13 @@ tourSchema.pre(/^find/, function (next) { // working with all the commands start
   this.find({ secretTour: { $ne: true } }); // this will alter the query before execute.
 
   this.start = Date.now(); // Set time for query start in miliSeconds.
-  console.log(this);
+  // console.log(this);
   next();
 });
 
 // "this" available in "post" QUERY MIDDLEWARE.
 tourSchema.post(/^find/, function (docs, next) {
-  console.log(docs);
+  // console.log(docs);
   console.log(`Query tooks time: ${Date.now() - this.start} in milliSeconds!!!`);
   next();
 });
@@ -137,7 +141,7 @@ tourSchema.post(/^find/, function (docs, next) {
 tourSchema.pre('aggregate', function (next) {
   // this will add extra match in pipeline.
   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  console.log(this.pipeline()); // show the pipline of aggregation.
+  // console.log(this.pipeline()); // show the pipline of aggregation.
   next();
 });
 

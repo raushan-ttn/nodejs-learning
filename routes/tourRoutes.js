@@ -1,5 +1,6 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
+const authController = require('../controllers/authController');
 // We can also use destructuring.
 // const { getTours, createTour, getSingleTour, updateTour, deleteTour } = require("./../controllers/tourController");
 
@@ -27,7 +28,7 @@ router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 router
   .route('/')
-  .get(tourController.getTours)
+  .get(authController.protectTours, tourController.getTours) // only for loggedin users.
   .post(tourController.createTour);
 // .post(tourController.checkBody, tourController.createTour);
 // we can pass specific middleWare to route, validate something before call API.

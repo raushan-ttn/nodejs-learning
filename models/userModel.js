@@ -34,6 +34,8 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!!!',
     },
   },
+  // this property/field updated everytime when user changed their password.
+  passwordChangedAt: Date,
 });
 
 // Create pre hooks to encrypt password.
@@ -57,6 +59,17 @@ userSchema.pre('save', async function (next) {
 // this method is type of instance method, it will available with all documents.
 userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimeStamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10,
+    );
+    return JWTTimestamp < changedTimeStamp; // return true or false (100 < 200)
+  }
+  return false; // "false" means user has not changed there password after the token was issued.
 };
 
 const User = mongoose.model('User', userSchema);
