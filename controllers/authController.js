@@ -81,19 +81,19 @@ exports.protectTours = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   // check if user still exists
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser) {
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
     // UseCase: user is using correct token, but suppose somehow deleted from system.
     // In that case check userId and throw error.
     return next(new AppError('the user belonging to this token no longer exists.', 401));
   }
 
   // check if user changed password after the token was issued.
-  if (freshUser.changedPasswordAfter(decoded.iat)) { // "iat" means issued at.
+  if (currentUser.changedPasswordAfter(decoded.iat)) { // "iat" means issued at.
     return next(new AppError('User recently changed there password, Please login again!!!', 401));
   }
 
   // GRANT Access to PROTECTED ROUTE.
-  req.user = freshUser; // if code reach this point, that means every things correct.
+  req.user = currentUser; // if code reach this point, that means every things correct.
   next();
 });
