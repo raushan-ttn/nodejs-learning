@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 // Mounting multiple Routers
 //Mounting the routers, has to come after all of these definitions or at least after we declared a variable.
 
-app.use('/nitours/v1/tours', tourRouter); // connect new router (tourRouter) to application to use middleware.
+app.use('/api/v1/tours', tourRouter); // connect new router (tourRouter) to application to use middleware.
 app.use('/api/v1/users', userRouter); // Can't use routers before we declare them.
 
 // CREATE a middleware to handle 404 request for all (get/post/put/patch/delete).
