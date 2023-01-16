@@ -18,6 +18,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     confirmpassword: req.body.confirmpassword,
     passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role,
   });
 
   // CREATE TOKEN.
@@ -98,3 +99,11 @@ exports.protectTours = catchAsync(async (req, res, next) => {
   // if we pass data from one middleware to another then simply put into request object.
   next();
 });
+
+exports.ristrictTo = (...roles) => (req, res, next) => {
+  // roles = ['admin','lead-guide'];
+  if (!roles.includes(req.user.role)) {
+    return next(new AppError('You do not have permission to do this action!', 403));
+  }
+  next();
+};

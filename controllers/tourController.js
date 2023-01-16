@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Tour = require('../models/tourModel');
 const ApiFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
 //##### ROUTE HANDLER ##########
 
@@ -291,24 +292,15 @@ exports.updateTour = async (req, res) => {
 };
 
 // delete request.
-exports.deleteTour = async (req, res) => {
-  try {
-    await Tour.findByIdAndDelete(req.params.id);
-    res
-      .status(204)
-      .json({
-        status: 'SUCCESS',
-        data: null,
-      });
-  } catch (err) {
-    res
-      .status(500)
-      .json({
-        status: 'fail',
-        message: err,
-      });
-  }
-};
+exports.deleteTour = catchAsync(async (req, res) => {
+  await Tour.findByIdAndDelete(req.params.id);
+  res
+    .status(204)
+    .json({
+      status: 'SUCCESS',
+      data: null,
+    });
+});
 
 // Aggregation pipeline: Matching and Grouping.
 

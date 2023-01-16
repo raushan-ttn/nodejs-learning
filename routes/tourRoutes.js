@@ -40,6 +40,10 @@ router
   .route('/:id')
   .get(tourController.getSingleTour)
   .patch(tourController.updateTour)
-  .delete(tourController.deleteTour);
+  .delete(
+    authController.protectTours, // First check user login
+    authController.ristrictTo('admin', 'lead-guide'), // check role ristriction on route.
+    tourController.deleteTour,
+  );
 
 module.exports = router;
