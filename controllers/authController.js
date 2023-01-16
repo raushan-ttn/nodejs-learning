@@ -107,3 +107,24 @@ exports.ristrictTo = (...roles) => (req, res, next) => {
   }
   next();
 };
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  // 1) Get user based on Posted email.
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError('There is no user for this email!', 404));
+  }
+  // 2) Generate the random reset token.
+  const resetToken = user.createPasswordResetToken();
+  // instance method just modified records in db, but not update the document (like expireTime).
+  // So we need to save document.
+  // Bypass Schema validators: we need to use "validateBeforeSave". its mongoose feature.
+  await user.save({ validateBeforeSave: false });
+
+  // 3) Send it to user's email.
+
+});
+
+exports.resetPassword = (req, res, next) => {
+
+};

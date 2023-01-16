@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto'); // nodeJs core module
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
@@ -41,6 +42,8 @@ const userSchema = new mongoose.Schema({
   },
   // this property/field updated everytime when user changed their password.
   passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpire: Date,
 });
 
 // Create pre hooks to encrypt password.
@@ -75,6 +78,17 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
     return JWTTimestamp < changedTimeStamp; // return true or false (100 < 200)
   }
   return false; // "false" means user has not changed there password after the token was issued.
+};
+
+// Instance method: can update value in collection becoz available for all dom.
+userSchema.methods.createPasswordResetToken = function () {
+  // create hexadecimal encrypted resetToken to protect from hacking.
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  // Insert/update resetToken in collection/DB.
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  // console.log(resetToken, this.passwordResetToken);
+  this.passwordResetExpire = Date.now() + 10 * 60 * 1000; // 10 minuts (in miliseconds).
+  return resetToken; // need to send this in email.
 };
 
 const User = mongoose.model('User', userSchema);
