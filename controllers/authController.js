@@ -16,6 +16,19 @@ const createSendToken = (user, statusCode, res) => {
   // CREATE TOKEN.
   const token = signToken(user._id);
 
+  const cookieOptions = {
+    expire: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000, // convert in milisecond
+    ),
+    // secure: true, (cookie will only be sent on encrypted (HTTPS) connection: enable Only on Prod)
+    httpOnly: true, // cookie will not modified or accessed in any way by the browser.
+  };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', token, cookieOptions);
+
+  // remove password from output.
+  user.password = undefined;
+
   res.status(statusCode).json({
     status: 'success',
     token, // ES-6 no need to define key and value if both have same name, it automatically pick.

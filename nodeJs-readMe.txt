@@ -223,3 +223,10 @@
 
 37. JWT_SECRET: Using HSA 256 encryption algorithem and should at least be 32 characters long.
 
+38. cookies: A cookie is basically just a small piece of text that a server can send to clients. Then when the client receives a
+             cookie, it will automatically store it and then automatically send it back along with all future requests to the
+             same server.
+
+             A browser automatically stores a cookie that it receives and sends it back in all future requests to that server
+             where it came from.
+
