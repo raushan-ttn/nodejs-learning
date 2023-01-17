@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const sendEmail = require('../utils/email');
 
 // JWT_SECRET: Using HSA 256 encryption algorithem and should at least be 32 characters long.
 const signToken = (id) => jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -122,7 +123,28 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email.
+  const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
+  console.log(resetUrl);
 
+  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetUrl}\nIf you didn't forgot your password, please ignore this email.`;
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Your password reset token (Valid for 10 minuts)',
+      message,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to email',
+    });
+  } catch (err) {
+    // If something get error in send email then reset both fields in db and call global error.
+    user.passwordResetToken = undefined;
+    user.passwordResetExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    next(new AppError('Unable to sent email, Please try again later!', 500));
+  }
 });
 
 exports.resetPassword = (req, res, next) => {
