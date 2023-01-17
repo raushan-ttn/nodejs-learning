@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpire: Date,
+  created: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 // Create pre hooks to encrypt password.
@@ -90,6 +94,15 @@ userSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpire = Date.now() + 10 * 60 * 1000; // 10 minuts (in miliseconds).
   return resetToken; // need to send this in email.
 };
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || !this.isNew) {
+    return next();
+  }
+  this.passwordChangedAt = Date.now() - 1000; // 1 Second
+  // sometime token generate before save the value in DB, so we need to set 1 second delay.
+  next();
+});
 
 const User = mongoose.model('User', userSchema);
 

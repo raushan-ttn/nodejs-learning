@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
+const crypto = require('crypto');
 
 // JWT_SECRET: Using HSA 256 encryption algorithem and should at least be 32 characters long.
 const signToken = (id) => jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -18,7 +19,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     confirmpassword: req.body.confirmpassword,
-    passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role,
   });
 
@@ -147,6 +147,31 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.resetPassword = (req, res, next) => {
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // 1) Get user based on the token.
+  const hashToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
 
-};
+  const user = await User.findOne({
+    passwordResetToken: hashToken,
+    passwordResetExpire: { $gt: Date.now() },
+  });
+console.log(user);
+  // 2) If token has not expired, and there is user set there new password.
+  if (!user) {
+    return next(new AppError('Your token has been expired or invalid!!', 400));
+  }
+  user.password = req.body.password;
+  user.confirmpassword = req.body.confirmpassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpire = undefined;
+  user.save(); // we need schema validation here.
+  // 3) update changedPasswordAt property for the user. => written in model file.
+
+  // 4) login the user and send JWT. if every thing ok then send token to client.
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+});
