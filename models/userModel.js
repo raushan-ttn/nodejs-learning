@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 // Create pre hooks to encrypt password.
@@ -101,6 +106,12 @@ userSchema.pre('save', function (next) {
   }
   this.passwordChangedAt = Date.now() - 1000; // 1 Second
   // sometime token generate before save the value in DB, so we need to set 1 second delay.
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  // this.find({ active: true });
+  this.find({ active: { $ne: false } });
   next();
 });
 

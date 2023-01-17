@@ -14,6 +14,7 @@ router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 router.patch('/updatePassword', authController.protectTours, authController.updatePassword);
 router.patch('/updateMe', authController.protectTours, userController.updateMe);
+router.delete('/deleteMe', authController.protectTours, userController.deleteMe);
 
 // User API's
 router

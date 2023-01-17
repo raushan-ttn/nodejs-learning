@@ -34,14 +34,25 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUsers = (req, res) => {
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+  res.status(204).json({
+    status: 'sucess',
+  });
+});
+
+exports.getUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find();
   res
     .status(200)
     .json({
-      status: "SUCCESS",
-      data: "Get Users page"
+      status: 'success',
+      results: users.length,
+      data: {
+        users,
+      },
     });
-}
+});
 
 exports.createUser = (req, res) => {
   res.status(201).json({
