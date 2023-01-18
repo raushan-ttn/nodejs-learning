@@ -1,9 +1,10 @@
-const express = require("express");
+const express = require('express');
 const morgan = require('morgan');
-const AppError = require('./utils/appError');
+const rateLimit = require('express-rate-limit');
 
-const tourRouter = require("./routes/tourRoutes");
-const userRouter = require("./routes/userRoutes");
+const AppError = require('./utils/appError');
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
@@ -11,6 +12,13 @@ const app = express();
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // third party middleware. this will only call in developemnt mode not live mode.
 }
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, Plesae try again an hour!',
+});
+app.use('/api', limiter); // this will work on all endpoint start with '/api'.
 
 // this is middleware. this will provide value for "req.body", without this show undefined.
 app.use(express.json());
