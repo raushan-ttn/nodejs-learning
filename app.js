@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
@@ -9,10 +10,15 @@ const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 //##### MIDDLEWARE ##########
+// Set Security HTTP headers.
+app.use(helmet());
+
+// Set Development logging.
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // third party middleware. this will only call in developemnt mode not live mode.
 }
 
+// Set Limit request for same IP.
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -20,9 +26,11 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter); // this will work on all endpoint start with '/api'.
 
+// Body parser: parse data from request body.
 // this is middleware. this will provide value for "req.body", without this show undefined.
 app.use(express.json());
 
+// Reading static files.
 // To server static file from server using middleWare.
 app.use(express.static(`${__dirname}/public`)); // Access files under "public directory" like 127.0.0.1/img/favicon.png
 
