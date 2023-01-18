@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
@@ -30,6 +32,12 @@ app.use('/api', limiter); // this will work on all endpoint start with '/api'.
 // this is middleware. this will provide value for "req.body", without this show undefined.
 app.use(express.json());
 
+// Data sanitization againts NOSQL query injection.
+app.use(mongoSanitize()); // return middleware function.
+
+// Data sanitization againts XSS.
+app.use(xss());
+
 // Reading static files.
 // To server static file from server using middleWare.
 app.use(express.static(`${__dirname}/public`)); // Access files under "public directory" like 127.0.0.1/img/favicon.png
@@ -49,24 +57,6 @@ app.use((req, res, next) => {
   // console.log(req.headers); // check headers from request.
   next();
 });
-
-// Post API callbacks.
-/*
-  app.get("/", (req, res) => {
-    // we can also send string.
-    // res.status(200).send("Hello world");
-    res
-      .status(200)
-      .json({ message: "ExpressJs is running on port 3000", app: "natours" });
-  });
-*/
-
-// Post API callbacks.
-/*
-  app.post("/", (req, res) => {
-    res.send("Hello world from POST API"); // status code 200 is by default.
-  });
-*/
 
 //##### ROUTES ##########
 

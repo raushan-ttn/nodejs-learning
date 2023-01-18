@@ -230,3 +230,18 @@
              A browser automatically stores a cookie that it receives and sends it back in all future requests to that server
              where it came from.
 
+39. Helmet: Use "helmet" Package to use import HTTP security headers.
+
+40. NoSql Query Injection: Route (/api/v1/users/login)
+                           Request Body:
+                                       {
+                                          "email" : {"$gt" : ""},
+                                          "password" : "pass1234"
+                                       }
+        Note: (1) If user have only password then he will login in application without knowing email of password, with sql injection.
+              (2) Use "express-mongo-sanitize" package to stop noSql Injection in express.
+              (3) Use "xss-clean" package to stop cross site scripting in express.
+
+41. express-rate-limit :  use "express-rate-limit" package to Set Limit request for same IP.
+
+42.
