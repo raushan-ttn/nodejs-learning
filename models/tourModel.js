@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 // const validator = require('validator');
 
 // Create Schema/collection using mongoose.
@@ -105,6 +106,7 @@ const tourSchema = new mongoose.Schema({
       day: Number,
     },
   ],
+  // guides: Array, // save array type value.
 }, {
   toJSON: { virtuals: true }, // this Options are helps to show "virtual field" in API as field.
   toObject: { virtuals: true },
@@ -135,6 +137,16 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
+/*
+  // Tour Guide Embeding: This will call only for new Document save/create() not for update.
+  tourSchema.pre('save', async function (next) {
+    // Here map return promise of user Data not actully userData.
+    const userPromises = this.guides.map(async (id) => await User.findById(id));
+    // Process promise to get actual data, need to call Promise.all() method.
+    this.guides = await Promise.all(userPromises);
+    next();
+  });
+*/
 // "this" not available in .post(), only doc and next available.
 /*
     tourSchema.post('save', (doc, next) => {
