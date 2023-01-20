@@ -247,4 +247,13 @@
 42. hpp (HTTP Parameter polution) : use "hpp" package, it helps us remove duplicate parameter from API.
                                 LIKE: "/api/v1/tours?sort=duration&sort=price"
 
-43.
+43. Create Foregin KEY: create Foregin KEY in Mongo Just like MYSQL. we can define Object of another model document inside document.
+                        Just like Parent-Child relation ship in mongo.
+                        Schema Code:
+                                 guides: [ // Create Reference key from User Model Document.
+                                             {
+                                                type: mongoose.Schema.ObjectId, // special type store Document Object of another model.
+                                                ref: 'User', // no need to require('User') model, its works without require.
+                                             },
+                                         ],
+                        Here "guides" fields store the User model document object inside tour model.

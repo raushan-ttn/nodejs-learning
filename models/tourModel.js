@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel');
+// const User = require('./userModel');
 // const validator = require('validator');
 
 // Create Schema/collection using mongoose.
@@ -107,6 +107,12 @@ const tourSchema = new mongoose.Schema({
     },
   ],
   // guides: Array, // save array type value.
+  guides: [ // Create Reference key from User Model Document.
+    {
+      type: mongoose.Schema.ObjectId, // special type store Document Object of another model.
+      ref: 'User', // no need to require('User') model, its works without require.
+    },
+  ],
 }, {
   toJSON: { virtuals: true }, // this Options are helps to show "virtual field" in API as field.
   toObject: { virtuals: true },
