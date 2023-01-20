@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
@@ -37,6 +38,11 @@ app.use(mongoSanitize()); // return middleware function.
 
 // Data sanitization againts XSS.
 app.use(xss());
+
+// Remove Parameter Polutions (duplicate parameter).
+app.use(hpp({
+  whitelist: ['duration', 'ratingsQuantity'], // we can whitelist some parameters (allow duplicate for these).
+}));
 
 // Reading static files.
 // To server static file from server using middleWare.

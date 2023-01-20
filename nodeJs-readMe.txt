@@ -244,4 +244,7 @@
 
 41. express-rate-limit :  use "express-rate-limit" package to Set Limit request for same IP.
 
-42.
+42. hpp (HTTP Parameter polution) : use "hpp" package, it helps us remove duplicate parameter from API.
+                                LIKE: "/api/v1/tours?sort=duration&sort=price"
+
+43.

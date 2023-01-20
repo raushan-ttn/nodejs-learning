@@ -55,5 +55,5 @@ if (process.argv[2] === '--import') {
 console.log(process.argv); // show all arguments from terminal.
 
 // Note: example command
-// $ node import-dev-data.js --import
-// $ node import-dev-data.js --delete
+// $ node ./dev-data/import-dev-data.js --import
+// $ node ./dev-data/import-dev-data.js --delete

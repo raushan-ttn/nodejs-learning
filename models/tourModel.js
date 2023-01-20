@@ -80,6 +80,31 @@ const tourSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  startLocation: { // we also set 0 day as start day, but keep startLocation as seperate.
+    // GeoJson
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point'],
+    },
+    coordinates: [Number],
+    address: String,
+    description: String,
+  },
+  locations: [ // always create array, which is create new document inside parent document.
+    {
+      // GeoJson
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+      day: Number,
+    },
+  ],
 }, {
   toJSON: { virtuals: true }, // this Options are helps to show "virtual field" in API as field.
   toObject: { virtuals: true },
