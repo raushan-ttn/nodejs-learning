@@ -1,8 +1,10 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
+const reviewController = require('../controllers/reviewController');
+
 // We can also use destructuring.
-// const { getTours, createTour, getSingleTour, updateTour, deleteTour } = require("./../controllers/tourController");
+// const { getTours, createTour, getSingleTour } = require("./../controllers/tourController");
 
 const router = express.Router(); // create a new route and save in tourRouter variable.
 
@@ -45,5 +47,18 @@ router
     authController.ristrictTo('admin', 'lead-guide'), // check role ristriction on route.
     tourController.deleteTour,
   );
+
+// Nested Route.
+router.route('/:tourId/reviews')
+  .get(authController.protectTours, reviewController.getAllReviews)
+  .post(authController.protectTours, reviewController.createReview);
+
+router.route('/:tourId/reviews/:reviewId')
+  .get(authController.protectTours, reviewController.getReview);
+
+// Example of Nested Tours.
+// POST /tour/wer23322/reviews
+// GET /tour/ee332323/reviews
+// GET /tour/asfds/reviews/asd21331
 
 module.exports = router;
