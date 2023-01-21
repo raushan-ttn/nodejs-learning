@@ -2,13 +2,14 @@ const express = require('express');
 const reviewController = require('../controllers/reviewController');
 const authController = require('../controllers/authController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true }); // merge all parameters.
 
-// To get all reviews of Specific Tour.
-router.get('/tours/:tourId');
+// Basically each route get access those params where it start from just like
+// review route start from '/reviews' then it will not access before like '/:tourId/reviews'
+// So that case we need to use {mergeParams: true} to get all parameter under review route.
 
-// To get all reviews of Specific User.
-router.get('/Users/userId');
+// Example of Nested Tours.
+// POST /tour/wer23322/reviews
 
 router.route('/')
   .get(authController.protectTours, reviewController.getAllReviews) // Only loggedIn Users

@@ -1,12 +1,35 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
-const reviewController = require('../controllers/reviewController');
+// const reviewController = require('../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 
 // We can also use destructuring.
 // const { getTours, createTour, getSingleTour } = require("./../controllers/tourController");
 
 const router = express.Router(); // create a new route and save in tourRouter variable.
+
+// Nested Route.
+
+// Example of Nested Tours.
+// POST /tour/wer23322/reviews
+// GET /tour/ee332323/reviews
+// GET /tour/asfds/reviews/asd21331
+/*
+    router.route('/:tourId/reviews')
+      .get(authController.protectTours, reviewController.getAllReviews)
+      .post(authController.protectTours, reviewController.createReview);
+
+    router.route('/:tourId/reviews/:reviewId')
+      .get(authController.protectTours, reviewController.getReview);
+ */
+
+router.use('/:tourId/reviews', reviewRouter); // Re-route to review route.
+
+// Note: just Like app.js, first '/api/v1/tours' route to this file and
+// this file re-route review route.
+
+// ==============================================================
 
 // Each Router is mini sub application for each resource, so this will work only -
 // for tours not for users. we can create middleware specific to params.
@@ -47,18 +70,5 @@ router
     authController.ristrictTo('admin', 'lead-guide'), // check role ristriction on route.
     tourController.deleteTour,
   );
-
-// Nested Route.
-router.route('/:tourId/reviews')
-  .get(authController.protectTours, reviewController.getAllReviews)
-  .post(authController.protectTours, reviewController.createReview);
-
-router.route('/:tourId/reviews/:reviewId')
-  .get(authController.protectTours, reviewController.getReview);
-
-// Example of Nested Tours.
-// POST /tour/wer23322/reviews
-// GET /tour/ee332323/reviews
-// GET /tour/asfds/reviews/asd21331
 
 module.exports = router;

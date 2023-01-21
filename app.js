@@ -82,7 +82,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRouter); // connect new router (tourRouter) to application to use middleware.
 app.use('/api/v1/users', userRouter); // Can't use routers before we declare them.
-app.use('/api/v1/reviews', reviewRouter); // Can't use routers before we declare them.
+// app.use('/api/v1/reviews', reviewRouter); // No need using nested route.
 
 // CREATE a middleware to handle 404 request for all (get/post/put/patch/delete).
 // THIS MIDDLEWARE AT END OF app.js file, and if any request not match the above specified URL.
