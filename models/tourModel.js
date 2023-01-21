@@ -142,6 +142,14 @@ tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true }); // CALL ANOTHER MIDDLEWARE INSIDE THIS.
   next();
 });
+// .populate in QUERY MIDDLEWARE
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+  next();
+});
 
 /*
   // Tour Guide Embeding: This will call only for new Document save/create() not for update.

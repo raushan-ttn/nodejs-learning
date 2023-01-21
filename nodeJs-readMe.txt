@@ -257,3 +257,23 @@
                                              },
                                          ],
                         Here "guides" fields store the User model document object inside tour model.
+
+44. Populate Data: get data from Reference object ID, .populate('fieldName') get data from another model based on stored ObjectId.
+                     const tour = await Tour.findById(req.params.id).populate({
+                        path: 'guides',
+                        select: '-__v -passwordChangedAt', // Hide some fields from user Schema.
+                     });
+                  Note: 1. .populate() creates new query so that sometime in large application where we use more populate then it hit the
+                           performance little bit.
+                        2. In good use of .populate write in Query MIDDLEWARE, So that it available in all queries. just Like:
+                              tourSchema.pre(/^find/, function (next) {
+                                 this.populate({
+                                    path: 'guides',
+                                    select: '-__v -passwordChangedAt',
+                                 });
+                                 next();
+                              });
+
+45.
+
+

@@ -199,6 +199,13 @@ exports.getTours = async (req, res) => {
 // We can get "req/res/next" arguments for each route.
 exports.getSingleTour = async (req, res, next) => {
   try {
+    // .populate('fieldName') get data from another model based on stored ObjectId.
+    /*
+      const tour = await Tour.findById(req.params.id).populate({
+          path: 'guides',
+          select: '-__v -passwordChangedAt',
+        });
+      */
     const tour = await Tour.findById(req.params.id);
     // Tour.findOne({_id:req.params.id});
     if (!tour) {
