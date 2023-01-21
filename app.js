@@ -9,7 +9,9 @@ const hpp = require('hpp');
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const globalErrorHandler = require('./controllers/errorController');
+
 const app = express();
 
 //##### MIDDLEWARE ##########
@@ -80,6 +82,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRouter); // connect new router (tourRouter) to application to use middleware.
 app.use('/api/v1/users', userRouter); // Can't use routers before we declare them.
+app.use('/api/v1/reviews', reviewRouter); // Can't use routers before we declare them.
 
 // CREATE a middleware to handle 404 request for all (get/post/put/patch/delete).
 // THIS MIDDLEWARE AT END OF app.js file, and if any request not match the above specified URL.
