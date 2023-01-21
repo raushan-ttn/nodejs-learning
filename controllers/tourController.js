@@ -206,7 +206,9 @@ exports.getSingleTour = async (req, res, next) => {
           select: '-__v -passwordChangedAt',
         });
       */
-    const tour = await Tour.findById(req.params.id);
+    const tour = await Tour.findById(req.params.id).populate({
+      path: 'reviews', // virtual populate field.
+    });
     // Tour.findOne({_id:req.params.id});
     if (!tour) {
       // next() jump to globalErrorHandler middleware.

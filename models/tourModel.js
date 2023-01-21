@@ -196,23 +196,16 @@ tourSchema.pre('aggregate', function (next) {
   next();
 });
 
-//
+// virtual populate: incase of parent referencing parent does not know who is child.
+// So that case we need to bind parent-child with help of virtual populate.
+tourSchema.virtual('reviews', { // create virtual field in /tours/:id API.
+  ref: 'Review', // Target/Child Model (which have parent reference).
+  foreignField: 'tour', // Field of child(Review) model.
+  localField: '_id', // Field of parent(Tour) model
+});
+// Note: Example set with getSingleTour.
 
 // Create modal (Tour), variableName and modal name always Uppercase.
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
-
-// Sample code to insert record in schema.
-// const testTour = new Tour({
-//   name: 'The Forest gump.',
-//   price: 650,
-// });
-
-// testTour
-//   .save()
-//   .then((doc) => {
-//     console.log('Documents:', doc);
-//   }).catch((err) => {
-//     console.log('Error: ', err);
-//   });

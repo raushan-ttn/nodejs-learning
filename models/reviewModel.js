@@ -33,12 +33,21 @@ const reviewSchema = new mongoose.Schema({
 
 // Query MiddleWare: for .populate()
 reviewSchema.pre(/^find/, function (next) {
+  /*
+    this.populate({
+        path: 'user',
+        select: 'name photo',
+      }).populate({
+        path: 'tour',
+        select: 'name',
+      });
+    */
+  // Review model populate tours, and due to "virtual populate" tour also call reviews. so that
+  // case it will called 3 times (tour->reviews->tour->reviews) this will do performance impact
+  // So that case show only user, but it's only based on project requirement not a thumb rule.
   this.populate({
     path: 'user',
     select: 'name photo',
-  }).populate({
-    path: 'tour',
-    select: 'name',
   });
   next();
 });
