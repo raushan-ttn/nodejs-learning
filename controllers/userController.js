@@ -57,22 +57,19 @@ exports.getUsers = catchAsync(async (req, res, next) => {
 
 exports.createUser = (req, res) => {
   res.status(201).json({
-    status: "SUCCESS",
+    status: 'success',
     data: {
-      tour: "User created",
+      user: 'User created',
     },
   });
 };
 
-exports.getSingleUser = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      data: "Get Single User data"
-    });
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 };
 
+exports.getSingleUser = factory.getOne(User);
 // Create request.: No need because we have signUp function.
 // exports.createUser = factory.createOne(User);
 // Update User.

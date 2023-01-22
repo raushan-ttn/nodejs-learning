@@ -21,25 +21,27 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 });
 
 // Get single review.
-exports.getReview = catchAsync(async (req, res, next) => {
-  const review = await Review.findById(req.params.id);
-  if (!review) {
-    return next(new AppError('No Reviews found', 400));
-  }
-  res.status(200).json({
-    status: 'success',
-    data: {
-      review,
-    },
-  });
-});
-
+/*
+    exports.getReview = catchAsync(async (req, res, next) => {
+      const review = await Review.findById(req.params.id);
+      if (!review) {
+        return next(new AppError('No Reviews found', 400));
+      }
+      res.status(200).json({
+        status: 'success',
+        data: {
+          review,
+        },
+      });
+    });
+ */
 // MIDDLEWARE for extra stuff for createReview.
 exports.setUserTourIds = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId; // Get tourId from url.
   if (!req.body.user) req.body.user = req.user.id; // Get login user
   next();
 };
+
 // Create Review.
 /*
     exports.createReview = catchAsync(async (req, res, next) => {
@@ -56,6 +58,9 @@ exports.setUserTourIds = (req, res, next) => {
       });
     });
  */
+
+// Get request.
+exports.getReview = factory.getOne(Review);
 // Create request.
 exports.createReview = factory.createOne(Review);
 // Update Review.

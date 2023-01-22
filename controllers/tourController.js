@@ -197,42 +197,46 @@ exports.getTours = async (req, res) => {
       });
   };
 */
-// We can get "req/res/next" arguments for each route.
-exports.getSingleTour = async (req, res, next) => {
-  try {
-    // .populate('fieldName') get data from another model based on stored ObjectId.
-    /*
-      const tour = await Tour.findById(req.params.id).populate({
-          path: 'guides',
-          select: '-__v -passwordChangedAt',
-        });
-      */
-    const tour = await Tour.findById(req.params.id).populate({
-      path: 'reviews', // virtual populate field.
-    });
-    // Tour.findOne({_id:req.params.id});
-    if (!tour) {
-      // next() jump to globalErrorHandler middleware.
-      return next(new AppError('No tour found', 404));
-    }
 
-    res
-      .status(200)
-      .json({
-        status: 'success',
-        data: {
-          tour,
-        },
-      });
-  } catch (err) {
-    res
-      .status(404)
-      .json({
-        status: 'fail',
-        message: err,
-      });
-  }
-};
+// We can get "req/res/next" arguments for each route.
+// exports.getSingleTour = async (req, res, next) => {
+//   try {
+//     // .populate('fieldName') get data from another model based on stored ObjectId.
+//     /*
+//       const tour = await Tour.findById(req.params.id).populate({
+//           path: 'guides',
+//           select: '-__v -passwordChangedAt',
+//         });
+//       */
+//     const tour = await Tour.findById(req.params.id).populate({
+//       path: 'reviews', // virtual populate field.
+//     });
+//     // Tour.findOne({_id:req.params.id});
+//     if (!tour) {
+//       // next() jump to globalErrorHandler middleware.
+//       return next(new AppError('No tour found', 404));
+//     }
+
+//     res
+//       .status(200)
+//       .json({
+//         status: 'success',
+//         data: {
+//           tour,
+//         },
+//       });
+//   } catch (err) {
+//     res
+//       .status(404)
+//       .json({
+//         status: 'fail',
+//         message: err,
+//       });
+//   }
+// };
+
+// Get Single Tour: pass populateOptions as argument.
+exports.getSingleTour = factory.getOne(Tour, { path: 'reviews' });
 
 /*
   // To modify request data we need to use middleware. and need to define at top.

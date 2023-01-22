@@ -16,6 +16,9 @@ router.patch('/updatePassword', authController.protectTours, authController.upda
 router.patch('/updateMe', authController.protectTours, userController.updateMe);
 router.delete('/deleteMe', authController.protectTours, userController.deleteMe);
 
+// Get /me
+router.get('/me', authController.protectTours, userController.getMe, userController.getSingleUser);
+
 // User API's
 router
   .route('/')
