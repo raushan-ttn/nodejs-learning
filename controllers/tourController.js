@@ -1,9 +1,10 @@
 //const fs = require('fs');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const Tour = require('../models/tourModel');
 const ApiFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
+// const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 //##### ROUTE HANDLER ##########
 
@@ -301,15 +302,20 @@ exports.updateTour = async (req, res) => {
 };
 
 // delete request.
-exports.deleteTour = catchAsync(async (req, res) => {
-  await Tour.findByIdAndDelete(req.params.id);
-  res
-    .status(204)
-    .json({
-      status: 'SUCCESS',
-      data: null,
+exports.deleteTour = factory.deleteOne(Tour);
+// deleteOne return function. JS Clouser will use here, inner function here will -
+// get access to the variables of the outer function even after the outer has already returned.
+/*
+    exports.deleteTour = catchAsync(async (req, res) => {
+      await Tour.findByIdAndDelete(req.params.id);
+      res
+        .status(204)
+        .json({
+          status: 'SUCCESS',
+          data: null,
+        });
     });
-});
+ */
 
 // Aggregation pipeline: Matching and Grouping.
 

@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 // Filter Object with only allowed keys/field.
 const filterData = (obj, ...allowdFields) => {
@@ -81,15 +82,7 @@ exports.updateUser = (req, res) => {
         tour: "Updated user" // Just for placeholder, no need to build whole logic here.
       }
     });
-}
+};
 
-exports.deleteUser = (req, res) => {
-  res
-    .status(204)
-    .json({
-      status: "SUCCESS",
-      data: {
-        tour: "deleted user" // Just for placeholder, no need to build whole logic here.
-      }
-    });
-}
+// Delete User.
+exports.deleteUser = factory.deleteOne(User);

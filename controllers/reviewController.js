@@ -1,6 +1,7 @@
 const Review = require('../models/reviewModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 // Get all reviews.
 exports.getAllReviews = catchAsync(async (req, res, next) => {
@@ -58,13 +59,4 @@ exports.updateReview = (req, res) => {
     });
 };
 
-exports.deleteReview = (req, res) => {
-  res
-    .status(204)
-    .json({
-      status: 'SUCCESS',
-      data: {
-        review: 'deleted review', // Just for placeholder, no need to build whole logic here.
-      },
-    });
-};
+exports.deleteReview = factory.deleteOne(Review);
