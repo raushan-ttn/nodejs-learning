@@ -71,18 +71,9 @@ exports.getSingleUser = (req, res) => {
       status: "SUCCESS",
       data: "Get Single User data"
     });
-}
-
-exports.updateUser = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "SUCCESS",
-      data: {
-        tour: "Updated user" // Just for placeholder, no need to build whole logic here.
-      }
-    });
 };
 
+// Update User.
+exports.updateUser = factory.updateOne(User);
 // Delete User.
 exports.deleteUser = factory.deleteOne(User);

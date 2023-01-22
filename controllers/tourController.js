@@ -275,32 +275,7 @@ exports.createTour = async (req, res) => {
 };
 
 // Update request.
-exports.updateTour = async (req, res) => {
-  // Middleware created to check ID.
-  try {
-    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, // pass some optional argument as per mongoose.
-      runValidators: true, // this will support schema validators in model.
-    });
-
-    res
-      .status(200)
-      .json({
-        status: 'success',
-        data: {
-          tour, // As per ES-6: property name has the same name of the value.
-        },
-      });
-  } catch (err) {
-    res
-      .status(400)
-      .json({
-        status: 'fail',
-        message: err,
-      });
-  }
-};
-
+exports.updateTour = factory.updateOne(Tour);
 // delete request.
 exports.deleteTour = factory.deleteOne(Tour);
 // deleteOne return function. JS Clouser will use here, inner function here will -

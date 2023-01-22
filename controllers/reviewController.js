@@ -48,15 +48,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateReview = (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: 'SUCCESS',
-      data: {
-        review: 'Updated review', // Just for placeholder, no need to build whole logic here.
-      },
-    });
-};
-
+// Update Review.
+exports.updateReview = factory.updateOne(Review);
+// Delete Review
 exports.deleteReview = factory.deleteOne(Review);
