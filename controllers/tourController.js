@@ -253,27 +253,8 @@ exports.getSingleTour = async (req, res, next) => {
     // Note: status code 201 for created
   };
 */
-exports.createTour = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const newTour = await Tour.create(req.body);
-    res.status(201).json({
-      status: 'SUCCESS',
-      data: {
-        newTour,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      // message: 'Invalid data Sent!!!',
-      message: err,
-    });
-  }
-
-  // Note: status code 201 for created
-};
-
+// Create request.
+exports.createTour = factory.createOne(Tour);
 // Update request.
 exports.updateTour = factory.updateOne(Tour);
 // delete request.

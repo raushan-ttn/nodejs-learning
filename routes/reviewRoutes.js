@@ -13,7 +13,11 @@ const router = express.Router({ mergeParams: true }); // merge all parameters.
 
 router.route('/')
   .get(authController.protectTours, reviewController.getAllReviews) // Only loggedIn Users
-  .post(authController.protectTours, reviewController.createReview);
+  .post(
+    authController.protectTours,
+    reviewController.setUserTourIds,
+    reviewController.createReview,
+  );
 
 router.route('/:id')
   .get(authController.protectTours, reviewController.getReview)

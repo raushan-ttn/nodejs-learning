@@ -60,9 +60,9 @@ exports.createUser = (req, res) => {
     status: "SUCCESS",
     data: {
       tour: "User created",
-    }
-  })
-}
+    },
+  });
+};
 
 exports.getSingleUser = (req, res) => {
   res
@@ -73,6 +73,8 @@ exports.getSingleUser = (req, res) => {
     });
 };
 
+// Create request.: No need because we have signUp function.
+// exports.createUser = factory.createOne(User);
 // Update User.
 exports.updateUser = factory.updateOne(User);
 // Delete User.

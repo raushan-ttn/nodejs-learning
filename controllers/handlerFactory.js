@@ -32,3 +32,18 @@ exports.updateOne = (Model) => catchAsync(async (req, res, next) => {
     },
   });
 });
+
+// Create Document: Factory function.
+exports.createOne = (Model) => catchAsync(async (req, res, next) => {
+  const doc = await Model.create(req.body);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      data: doc,
+    },
+  });
+  // Note: status code 201 for created
+});
+
+// Get document: we can also write factory function for get Document just like update,delete
+// Its completely based on our requirement.

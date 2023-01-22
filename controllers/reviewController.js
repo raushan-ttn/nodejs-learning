@@ -34,20 +34,30 @@ exports.getReview = catchAsync(async (req, res, next) => {
   });
 });
 
-// Create Review.
-exports.createReview = catchAsync(async (req, res, next) => {
+// MIDDLEWARE for extra stuff for createReview.
+exports.setUserTourIds = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId; // Get tourId from url.
   if (!req.body.user) req.body.user = req.user.id; // Get login user
+  next();
+};
+// Create Review.
+/*
+    exports.createReview = catchAsync(async (req, res, next) => {
+      // For addtional stuff we will create MiddleWare.
+      if (!req.body.tour) req.body.tour = req.params.tourId; // Get tourId from url.
+      if (!req.body.user) req.body.user = req.user.id; // Get login user
 
-  const newReview = await Review.create(req.body);
-  res.status(201).json({
-    status: 'SUCCESS',
-    data: {
-      review: newReview,
-    },
-  });
-});
-
+      const newReview = await Review.create(req.body);
+      res.status(201).json({
+        status: 'SUCCESS',
+        data: {
+          review: newReview,
+        },
+      });
+    });
+ */
+// Create request.
+exports.createReview = factory.createOne(Review);
 // Update Review.
 exports.updateReview = factory.updateOne(Review);
 // Delete Review
