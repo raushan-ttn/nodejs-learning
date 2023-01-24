@@ -71,6 +71,21 @@ userSchema.pre('save', async function (next) {
   // this is just for validation purpose only.
 });
 
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || !this.isNew) {
+    return next();
+  }
+  this.passwordChangedAt = Date.now() - 1000; // 1 Second
+  // sometime token generate before save the value in DB, so we need to set 1 second delay.
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  // this.find({ active: true });
+  this.find({ active: { $ne: false } });
+  next();
+});
+
 // we can't do manually becoz "candidatePassword" is not hashed and "userPassword" is encrypted.
 // compare() function return "true" if both password matched.
 // this method is type of instance method, it will available with all documents.
@@ -99,21 +114,6 @@ userSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpire = Date.now() + 10 * 60 * 1000; // 10 minuts (in miliseconds).
   return resetToken; // need to send this in email.
 };
-
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || !this.isNew) {
-    return next();
-  }
-  this.passwordChangedAt = Date.now() - 1000; // 1 Second
-  // sometime token generate before save the value in DB, so we need to set 1 second delay.
-  next();
-});
-
-userSchema.pre(/^find/, function (next) {
-  // this.find({ active: true });
-  this.find({ active: { $ne: false } });
-  next();
-});
 
 const User = mongoose.model('User', userSchema);
 
