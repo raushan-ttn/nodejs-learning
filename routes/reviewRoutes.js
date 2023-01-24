@@ -11,17 +11,22 @@ const router = express.Router({ mergeParams: true }); // merge all parameters.
 // Example of Nested Tours.
 // POST /tour/wer23322/reviews
 
+// That's a nice little trick in order to protect all of the routes at the same time,-
+// typically by using a middleware that comes before all these other routes.
+
+// Protect all routes after this middleware.
+router.use(authController.protectTours);
+
 router.route('/')
-  .get(authController.protectTours, reviewController.getAllReviews) // Only loggedIn Users
+  .get(reviewController.getAllReviews) // Only loggedIn Users
   .post(
-    authController.protectTours,
     reviewController.setUserTourIds,
     reviewController.createReview,
   );
 
 router.route('/:id')
-  .get(authController.protectTours, reviewController.getReview)
-  .patch(authController.protectTours, reviewController.updateReview)
-  .delete(authController.protectTours, reviewController.deleteReview);
+  .get(reviewController.getReview)
+  .patch(reviewController.updateReview)
+  .delete(reviewController.deleteReview);
 
 module.exports = router;

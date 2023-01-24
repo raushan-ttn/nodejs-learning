@@ -49,11 +49,13 @@ router.route('/top-5-tours').get(tourController.aliasTopFive, tourController.get
 router.route('/tour-stats').get(tourController.getToursStats);
 router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
+router.use(authController.protectTours);
+
 // Note in express we have route method to combine similar route togather.
 
 router
   .route('/')
-  .get(authController.protectTours, tourController.getTours) // only for loggedin users.
+  .get(tourController.getTours) // only for loggedin users.
   .post(tourController.createTour);
 // .post(tourController.checkBody, tourController.createTour);
 // we can pass specific middleWare to route, validate something before call API.
@@ -66,7 +68,7 @@ router
   .get(tourController.getSingleTour)
   .patch(tourController.updateTour)
   .delete(
-    authController.protectTours, // First check user login
+    // authController.protectTours, // First check user login(MIDDLEWARE ADDED BEFORE)
     authController.ristrictTo('admin', 'lead-guide'), // check role ristriction on route.
     tourController.deleteTour,
   );
