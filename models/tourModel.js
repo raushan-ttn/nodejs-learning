@@ -118,6 +118,19 @@ const tourSchema = new mongoose.Schema({
   toObject: { virtuals: true },
 });
 
+// Create Index in Schema Fields. 1 = ASC ORDER , -1 = DESC ORDER
+tourSchema.index({ price: 1, ratingsAverage: -1 }); // Compound Index
+tourSchema.index({ slug: 1 });
+// IF we perform search queried over normal field then its gives output 9 outOF 3 (exmple)
+// based on search Conditions.That means it scaned 9 documents and give only 3 output.
+// this will create performance impact inCase of large number records. To Solve this issue,
+// We will create indexes on "field".this ID index is then basically an ordered list
+// of all the IDs that get stored somewhere outside of the collection okay.
+// And you can actually see a size here, that it has 36 kilobytes, this index all right.
+// And this index is extremely useful. Because whenever documents are queried by the ID-
+// MongoDB will search that ordered index instead of searching through the whole collection
+// and look at all the documents one by one, which is of course much slower.
+
 // virtual properties.
 tourSchema.virtual('durationweek').get(function () { // normal function becoz we need to use this keyword.
   return this.duration / 7;

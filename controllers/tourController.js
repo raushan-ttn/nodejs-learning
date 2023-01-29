@@ -147,6 +147,8 @@ exports.getTours = async (req, res) => {
       .sort()
       .limitFields()
       .pagination(); // create query
+    // get the details of query,check "executionStats" in output.
+    // const tours = await features.query.explain();
     const tours = await features.query; // here query executes and return promise.
     // SEND Response.
     res.status(200).json({
