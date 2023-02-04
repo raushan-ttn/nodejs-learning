@@ -1,3 +1,4 @@
+const path = require('path'); // core module
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -9,10 +10,14 @@ const hpp = require('hpp');
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
+
+// The first step is to actually tell Express what template engine we're gonna use.
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views')); // set the views folder path.
 
 //##### MIDDLEWARE ##########
 // Set Security HTTP headers.
@@ -48,7 +53,10 @@ app.use(hpp({
 
 // Reading static files.
 // To server static file from server using middleWare.
-app.use(express.static(`${__dirname}/public`)); // Access files under "public directory" like 127.0.0.1/img/favicon.png
+// Access files under "public directory" like 127.0.0.1/img/favicon.png
+
+//app.use(express.static(`${__dirname}/public`)); // Old way
+app.use(express.static(path.join(__dirname, 'public'))); // using express way
 
 // Create Custom MiddleWare.
 // params name up to you.
@@ -57,8 +65,9 @@ app.use((req1, res1, next) => {
   next(); // next1/next function call next middleware in stack.
 });
 
-// Note: In case of middleware Order of middleware is more important, otherwise it will not work properly.
-// If middleware code write after routes then this case request and response cycle will complete before this in that case middleware not call.
+// Note: In case of middleware Order of middleware is more important,
+// otherwise it will not work properly. If middleware code write after routes then
+//this case request and response cycle will complete before this in that case middleware not call.
 
 app.use((req, res, next) => {
   req.requestTime = `Time comes from middleware: ${new Date().toISOString()}`;
@@ -77,8 +86,17 @@ app.use((req, res, next) => {
     app.delete("/nitours/v1/tours/:id", deleteTour);
  */
 
+// Create Homepage and register template for this.
+app.get('/', (req, res) => {
+  res.status(200).render('base', { // no need to define extension (.pub) here.
+    tour: 'Forest Hiker',
+    user: 'Jonas',
+  });
+});
+
 // Mounting multiple Routers
-//Mounting the routers, has to come after all of these definitions or at least after we declared a variable.
+//Mounting the routers, has to come after all of these definitions
+//or at least after we declared a variable.
 
 app.use('/api/v1/tours', tourRouter); // connect new router (tourRouter) to application to use middleware.
 app.use('/api/v1/users', userRouter); // Can't use routers before we declare them.
@@ -89,13 +107,12 @@ app.use('/api/v1/users', userRouter); // Can't use routers before we declare the
 // that means response cycle not completed yet, and then this will BY DEfault 404.
 
 app.all('*', (req, res, next) => {
-
   /*
-      res.status(404).json({
-          status: 'fail',
-          message: `Can't find URL ${req.originalUrl} on this Server!!!`,
-        });
-    */
+        res.status(404).json({
+            status: 'fail',
+            message: `Can't find URL ${req.originalUrl} on this Server!!!`,
+          });
+      */
 
   /*
     // CREATE ERROR: we don't need to write here, we need to write own Error class.

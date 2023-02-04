@@ -274,6 +274,13 @@
                                  next();
                               });
 
-45.
-
+45. Pug:  Pug is actually the most commonly used template engine with Express.
+46. Pug Comment: " // " thats means comment the code but will show in browser inspact element, (//-) that means comment but
+                  not show in bowser inspact element as well.
+47. Template litterals: template literals in JS like ${tour} but in pug like #{tour}
+48. Interpolation syntax :
+                     1.  title Natours | #{title}
+                     2.   h1=tour
+            Note: In syntax 1 have all string then no need to add (=) if we add title=Natours | #{title} then "Natours" will also
+                  compile for get error because its string not variable.
 
