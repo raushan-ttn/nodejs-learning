@@ -284,3 +284,6 @@
             Note: In syntax 1 have all string then no need to add (=) if we add title=Natours | #{title} then "Natours" will also
                   compile for get error because its string not variable.
 
+48. Multer (fileUpload): Multer is a very popular middleware to handle multi-part form data, which is a form in coding that's used
+                        to upload files from a form.
+
