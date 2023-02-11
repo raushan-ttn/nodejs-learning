@@ -66,7 +66,11 @@ router
 router
   .route('/:id')
   .get(tourController.getSingleTour)
-  .patch(tourController.updateTour)
+  .patch(
+    tourController.uploadToursImages,
+    tourController.resizeToursImages,
+    tourController.updateTour,
+  )
   .delete(
     // authController.protectTours, // First check user login(MIDDLEWARE ADDED BEFORE)
     authController.ristrictTo('admin', 'lead-guide'), // check role ristriction on route.
