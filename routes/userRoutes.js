@@ -14,7 +14,13 @@ router.post('/login', authController.login);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 router.patch('/updatePassword', authController.protectTours, authController.updatePassword);
-router.patch('/updateMe', authController.protectTours, userController.uploadUserPhoto, userController.updateMe);
+router.patch(
+  '/updateMe',
+  authController.protectTours,
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe,
+);
 router.delete('/deleteMe', authController.protectTours, userController.deleteMe);
 
 // MIDDLEWARE RUN in Sequence, so before defined route will be run as anonymous.
